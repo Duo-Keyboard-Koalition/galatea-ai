@@ -29,7 +29,7 @@ export default function Home() {
       <header className="bg-ivory-200 bg-opacity-90 shadow-md sticky top-0 z-10">
         <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-2">
-            <Image src="/favicon.png" alt="Galatea.AI Logo" width={40} height={40} />
+            <Image src="/favicon.ico" alt="Galatea.AI Logo" width={40} height={40} />
             <span className="text-2xl font-bold text-earth-700">Galatea.AI</span>
           </Link>
         </nav>
@@ -37,7 +37,7 @@ export default function Home() {
 
       <main className="container mx-auto px-6 py-16">
         <section className="text-center mb-20">
-          <Image src="/favicon.png" alt="Galatea.AI Logo" width={120} height={120} className="mx-auto mb-8" />
+          <Image src="/favicon.ico" alt="Galatea.AI Logo" width={120} height={120} className="mx-auto mb-8" />
           <h1 className="text-5xl md:text-7xl font-bold text-earth-800 mb-6">
             Sculpt Your Perfect <span className="text-rose-600">AI Companion</span>
           </h1>

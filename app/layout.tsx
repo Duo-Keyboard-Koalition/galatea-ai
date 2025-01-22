@@ -7,11 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Galatea.AI - Your Perfect AI Girlfriend',
   description: 'Experience companionship and emotional support with personalized AI girlfriends',
-  icons: {
-    icon: '/favicon.png',
-    shortcut: '/favicon.png',
-    apple: '/favicon.png',
-  }
+
 }
 
 export default function RootLayout({
