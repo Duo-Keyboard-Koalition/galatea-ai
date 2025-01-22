@@ -15,15 +15,7 @@ export default function Home() {
   const handleStartSwiping = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/initiated-swipe', {
-        method: 'POST',
-      })
-      if (!response.ok) {
-        throw new Error('Failed to initiate swipe')
-      }
-      const data = await response.json()
-      console.log(data.message) // Log the message from the backend
-      router.push('/start-swiping')
+       router.push('/start-swiping')
     } catch (error) {
       console.error('Error initiating swipe:', error)
       // Optionally, you can show an error message to the user here
