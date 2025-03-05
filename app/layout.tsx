@@ -26,7 +26,7 @@ export default function RootLayout({
             <span className="text-2xl font-bold text-earth-700">Galatea.AI</span>
           </Link>
           <div className="flex space-x-6">
-            <Link href="/sign-in" className="bg-blue-500 text-white px-4 py-2 rounded">
+            <Link href="/sign-in" className="bg-rose-600 text-ivory-100 hover:bg-rose-700 px-4 py-2 rounded">
               Sign In
             </Link>
           </div>
