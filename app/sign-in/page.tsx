@@ -10,8 +10,8 @@ export default function SignInPage() {
         <div className="bg-white p-8 rounded-lg shadow-md flex flex-col items-center">
           <h1 className="text-4xl font-bold mb-4 text-earth-800">Sign in with Galatea AI</h1>
           <img src="/favicon.png" alt="Galatea AI Logo" className="mb-4 w-16 h-16" />
-          <button onClick={handleGoogleSignIn} className="mt-4 p-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition">
-            Sign in with Google
+          <button onClick={handleGoogleSignIn} className="mt-4 p-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition flex items-center">
+            <img src="/favicon.png" alt="Google Logo" className="mr-2 w-5 h-5" />
           </button>
         </div>
     </div>
