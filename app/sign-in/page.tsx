@@ -8,6 +8,7 @@ export default function SignInPage() {
     } catch (error) {
       alert(error.message);
   };
+  }
 }
 
   return (
