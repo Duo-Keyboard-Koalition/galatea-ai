@@ -9,7 +9,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-rose-600 text-ivory-100 hover:bg-rose-700",
+        default: "bg-rose-600 text-ivory-100 hover:bg-rose-700", // This is the default variant
+        signIn: "bg-rose-600 text-ivory-100 hover:bg-rose-700", // Add a signIn variant if needed
         destructive: "bg-red-500 text-ivory-100 hover:bg-red-600",
         outline: "border border-earth-200 bg-ivory-100 hover:bg-earth-100 hover:text-earth-700",
         secondary: "bg-earth-200 text-earth-700 hover:bg-earth-300",
