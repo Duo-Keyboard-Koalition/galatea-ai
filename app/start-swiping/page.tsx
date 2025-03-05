@@ -59,8 +59,21 @@ export default function StartSwiping() {
                   <div className="text-xl font-medium text-earth-700">
                     Welcome, {user.displayName || user.email}!
                   </div>
-                  <div className="text-sm text-earth-500 mt-1">
-                    User ID: {user.uid}
+                  <div className="bg-earth-50 border border-earth-200 rounded-md p-3 mt-2 inline-block">
+                    <div className="text-sm text-earth-600 font-medium">Google ID:</div>
+                    <div className="text-earth-800 font-mono text-sm break-all">{user.uid}</div>
+                    {user.email && (
+                      <div className="mt-1">
+                        <div className="text-sm text-earth-600 font-medium">Email:</div>
+                        <div className="text-earth-800 text-sm">{user.email}</div>
+                      </div>
+                    )}
+                    {user.providerData && user.providerData[0] && (
+                      <div className="mt-1">
+                        <div className="text-sm text-earth-600 font-medium">Sign-in Method:</div>
+                        <div className="text-earth-800 text-sm">{user.providerData[0].providerId}</div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -87,7 +100,10 @@ export default function StartSwiping() {
                 <p className="text-rose-700 mb-4">
                   Browse through AI profiles and find your perfect match.
                 </p>
-                <Button className="bg-rose-600 hover:bg-rose-700 text-white">
+                <Button 
+                  className="bg-rose-600 hover:bg-rose-700 text-white"
+                  onClick={() => router.push('/swipe')}
+                >
                   Find Matches
                 </Button>
               </Card>
