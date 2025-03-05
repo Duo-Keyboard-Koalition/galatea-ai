@@ -97,13 +97,24 @@ export default function ProfileSetup() {
     
     setSaving(true);
     try {
-      // Save profile data
-      await saveUserProfile(user.uid, formData);
+      // Prepare data for Firestore
+      const profileData = {
+        ...formData,
+        userId: user.uid,
+        email: user.email,
+        lastUpdated: new Date(),
+        provider: user.providerData[0]?.providerId || 'unknown'
+      };
+      
+      // Save profile data to Firestore
+      await saveUserProfile(user.uid, profileData);
       
       // Upload profile image if selected
       if (profileImage) {
         await uploadProfileImage(user.uid, profileImage);
       }
+      
+      console.log("Profile saved successfully to Firestore");
       
       // Redirect to start swiping
       router.push('/start-swiping');

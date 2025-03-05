@@ -47,11 +47,18 @@ export default function SwipePage() {
     setSwiping(true);
     try {
       const currentProfile = profiles[currentProfileIndex];
-      await recordSwipe(user.uid, currentProfile.uuid, direction);
+      console.log(`Recording swipe ${direction} for profile ${currentProfile.uuid || currentProfile.id}`);
+      
+      // Use profile.uuid or profile.id as fallback
+      const profileId = currentProfile.uuid || currentProfile.id;
+      
+      // Record the swipe in Firestore
+      await recordSwipe(user.uid, profileId, direction);
       
       // If it's a right swipe, show match notification
       if (direction === 'right') {
         setMatchFound(true);
+        console.log(`Match created with ${currentProfile.name}`);
         setTimeout(() => {
           setMatchFound(false);
         }, 2000);
@@ -61,6 +68,7 @@ export default function SwipePage() {
       setCurrentProfileIndex(prev => prev + 1);
     } catch (error) {
       console.error("Error recording swipe:", error);
+      alert("There was an error. Please try again.");
     } finally {
       setSwiping(false);
     }
