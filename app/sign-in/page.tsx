@@ -1,6 +1,6 @@
 export default function SignInPage() {
   const handleGoogleSignIn = () => {
-    // Do nothing
+    alert("Thank you for exploring!");
   };
 
   return (
