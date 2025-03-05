@@ -26,14 +26,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
-      <header className="bg-ivory-200 bg-opacity-90 shadow-md sticky top-0 z-10">
-        <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-2">
-            <Image src="/favicon.png" alt="Galatea.AI Logo" width={40} height={40} />
-            <span className="text-2xl font-bold text-earth-700">Galatea.AI</span>
-          </Link>
-        </nav>
-      </header>
 
       <main className="container mx-auto px-6 py-16">
         <section className="text-center mb-20">

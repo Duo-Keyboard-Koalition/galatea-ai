@@ -3,7 +3,9 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## Getting Started
 
 First, run the development server:
-
+```
+aider --model openai/chatgpt-4o-latest --openai-api-key 455fde649ad34658a7e7048b77286ca2 --openai-api-base https://api.aimlapi.com/v1
+```
 ```bash
 npm run dev
 # or
