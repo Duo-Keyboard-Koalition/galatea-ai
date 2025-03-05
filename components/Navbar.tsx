@@ -1,7 +1,14 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+import { useRouter } from 'next/router';
+
 export default function Navbar() {
+  const router = useRouter();
+  const isSignInPage = router.pathname === '/sign-in';
+
+  if (isSignInPage) return null;
+
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-ivory-100 shadow-md backdrop-blur-sm bg-opacity-95">
       <div className="container mx-auto">
