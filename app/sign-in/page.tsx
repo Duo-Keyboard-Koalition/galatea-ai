@@ -1,3 +1,5 @@
+"use client";
+
 export default function SignInPage() {
   const handleGoogleSignIn = () => {
     alert("Thank you for exploring!");
