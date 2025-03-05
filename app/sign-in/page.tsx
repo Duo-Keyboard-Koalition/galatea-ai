@@ -8,6 +8,7 @@ export default function SignInPage() {
     } catch (error) {
       alert(error.message);
   };
+}
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/girl-profiles/mekkana-banner.png')" }}>
