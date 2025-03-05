@@ -26,7 +26,12 @@ export default function RootLayout({
             <span className="text-2xl font-bold text-earth-700">Galatea.AI</span>
           </Link>
           <div className="flex space-x-6">
-            <Link href="/sign-in" className="bg-rose-600 text-ivory-100 hover:bg-rose-700 px-4 py-2 rounded">
+            <button 
+              className="bg-red-600 text-ivory-100 hover:bg-red-700 px-4 py-2 rounded"
+              onClick={() => alert('Sign In Popup!')}
+            >
+              Sign In
+            </button>
               Sign In
             </Link>
           </div>
