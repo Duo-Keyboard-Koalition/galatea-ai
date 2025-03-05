@@ -1,4 +1,5 @@
 import './globals.css';
+import Image from 'next/image'; // Import Image from next/image
 import Link from 'next/link'; // Import Link from next/link
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
