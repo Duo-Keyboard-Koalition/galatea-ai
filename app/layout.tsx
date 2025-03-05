@@ -13,10 +13,8 @@ export const metadata: Metadata = {
 }
 
 const RootLayout: React.FC<{
-  children,
-}: {
   children: React.ReactNode
-}) {
+}> = ({ children }) => {
 const RootLayout: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
