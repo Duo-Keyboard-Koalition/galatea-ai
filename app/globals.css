@@ -3,6 +3,10 @@
 @tailwind utilities;
  
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
   :root {
     --background: 36 33% 97%;
     --foreground: 24 6% 15%;
@@ -72,6 +76,19 @@
   }
   body {
     @apply bg-background text-foreground;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  main {
+    flex: 1;
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply container mx-auto px-4 sm:px-6 py-8;
   }
 }
 
