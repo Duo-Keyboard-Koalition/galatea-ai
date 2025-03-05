@@ -1,23 +1,24 @@
 import './globals.css';
-import Image from 'next/image'; // Import Image from next/image
-import Link from 'next/link'; // Import Link from next/link
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import Image from 'next/image';
+import Link from 'next/link';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Galatea.AI - Your Perfect AI Girlfriend',
   description: 'Experience companionship and emotional support with personalized AI girlfriends',
+  icons: {
+    icon: '/favicon.png',
+  }
+};
 
-}
-
-const RootLayout: React.FC<{
+export default function RootLayout({
+  children,
+}: {
   children: React.ReactNode
-}> = ({ children }) => {
-const RootLayout: React.FC<{
-  children: React.ReactNode
-}> = ({ children }) => {
+}) {
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -33,13 +34,10 @@ const RootLayout: React.FC<{
             >
               Sign In
             </button>
-              Sign In
-            </Link>
           </div>
         </nav>
         {children}
       </body>
     </html>
-  )
+  );
 }
-
