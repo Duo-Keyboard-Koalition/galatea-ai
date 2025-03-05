@@ -25,7 +25,11 @@ export default function RootLayout({
             <Image src="/favicon.png" alt="Galatea.AI Logo" width={40} height={40} />
             {/* <span className="text-2xl font-bold text-earth-700">Galatea.AI</span> */}
           </Link>
-          {/* Sign In Button Removed */}
+          <div className="hidden md:flex space-x-6">
+            <Link href="/sign-in" className="bg-blue-500 text-white px-4 py-2 rounded">
+              Sign In
+            </Link>
+          </div>
         </nav>
         {children}
       </body>
