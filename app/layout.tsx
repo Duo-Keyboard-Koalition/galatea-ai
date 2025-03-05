@@ -12,11 +12,14 @@ export const metadata: Metadata = {
 
 }
 
-export default function RootLayout({
+const RootLayout: React.FC<{
   children,
 }: {
   children: React.ReactNode
 }) {
+const RootLayout: React.FC<{
+  children: React.ReactNode
+}> = ({ children }) => {
   return (
     <html lang="en">
       <body className={inter.className}>
