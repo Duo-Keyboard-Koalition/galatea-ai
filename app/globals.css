@@ -79,16 +79,18 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    padding-top: env(safe-area-inset-top);
   }
   
   main {
     flex: 1;
+    scroll-margin-top: 6rem;
   }
 }
 
 @layer components {
   .page-container {
-    @apply container mx-auto px-4 sm:px-6 py-8;
+    @apply container mx-auto px-4 sm:px-6 py-8 mt-4;
   }
   
   .nav-link {
@@ -97,6 +99,10 @@
   
   .btn-primary {
     @apply bg-rose-600 text-ivory-100 hover:bg-rose-700 px-5 py-2 rounded-md transition-colors font-medium shadow-sm;
+  }
+  
+  .section {
+    @apply scroll-mt-24;
   }
 }
 
