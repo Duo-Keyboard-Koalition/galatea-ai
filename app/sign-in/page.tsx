@@ -9,8 +9,8 @@ export default function SignInPage() {
   const handleGoogleSignIn = async () => {
     try {
       const user = await googleSignIn();
-      alert(`Welcome, ${user}!`);
-      // Redirect to profile setup or start swiping page after successful login
+      alert(`Welcome, ${user.displayName || user.email}!`);
+      // Redirect to profile setup page after successful login
       router.push("/profile-setup");
     } catch (error) {
       if (error instanceof Error) {

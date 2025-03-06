@@ -31,8 +31,7 @@ export default function ProfileSetup() {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        // Show welcome message with Google ID
-        alert(`Welcome, ${currentUser.displayName || currentUser.email}! (ID: ${currentUser.uid})`);
+        console.log("User authenticated:", currentUser);
         
         // Pre-fill form with existing data if available
         try {
@@ -144,7 +143,7 @@ export default function ProfileSetup() {
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6 max-w-2xl mx-auto">
             <p className="font-bold">Welcome to Galatea.AI!</p>
             <p>User: {user.displayName || user.email}</p>
-            <p className="text-sm">Google ID: {user.uid}</p>
+            <p className="text-sm">Connected with: {user.providerData[0]?.providerId || 'Unknown provider'}</p>
           </div>
         )}
         
