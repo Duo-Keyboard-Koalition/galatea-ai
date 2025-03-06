@@ -4,15 +4,16 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import app from "@/lib/firebase";
 import { saveUserProfile, uploadProfileImage, getUserProfile } from "@/lib/userProfile";
-
+import { User } from "firebase/auth";
 export default function ProfileSetup() {
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  
+  
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
