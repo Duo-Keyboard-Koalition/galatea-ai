@@ -89,10 +89,13 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
       setError(null);
       await googleSignIn();
       // Using redirect method, so we won't reach this point
-    } catch (error: any) {
-      console.error("Error during sign in:", error);
-      setError(error.message || "Failed to sign in");
-      setLoading(false);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error during sign in:", error);
+        setError(error.message || "Failed to sign in");
+      } else {
+        console.error("Unknown error during sign in:", error);
+      }
     }
   };
 
@@ -102,9 +105,13 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
       setLoading(true);
       await firebaseSignOut(auth);
       router.push("/");
-    } catch (error: any) {
-      console.error("Error during sign out:", error);
-      setError(error.message || "Failed to sign out");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error during sign out:", error);
+        setError(error.message || "Failed to sign out");
+      } else {
+        console.error("Unknown error during sign out:", error);
+      }
     } finally {
       setLoading(false);
     }

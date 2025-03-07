@@ -8,10 +8,17 @@ const storage = getStorage(app);
 const auth = getAuth(app);
 
 // Create or update user profile
-export const saveUserProfile = async (userId, profileData) => {
+interface UserProfile {
+  userId: string;
+  updatedAt: Date;
+  createdAt?: Date;
+  [key: string]: string | number | boolean | Date | undefined; // Allow additional properties
+}
+
+export const saveUserProfile = async (userId: string, profileData: Partial<UserProfile>): Promise<boolean> => {
   try {
     // Add timestamp and ensure userId is included
-    const dataToSave = {
+    const dataToSave: UserProfile = {
       ...profileData,
       updatedAt: new Date(),
       userId: userId,
