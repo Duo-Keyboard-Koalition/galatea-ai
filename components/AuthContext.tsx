@@ -6,7 +6,6 @@ import {
   getAuth,
   onAuthStateChanged,
   signOut as firebaseSignOut,
-  getRedirectResult
 } from "firebase/auth";
 import { googleSignIn } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -52,25 +51,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   useEffect(() => {
     console.log("Setting up auth state listener");
     
-    // Check for redirect result on initial load
-    const checkRedirect = async () => {
-      try {
-        console.log("Checking for redirect result...");
-        const result = await getRedirectResult(auth);
-        if (result && result.user) {
-          console.log("Redirect sign-in successful:", result.user.displayName);
-          // No need to set user manually, onAuthStateChanged will handle it
-          
-          // Redirect to swipe page after successful sign-in
-          router.push('/swipe');
-        }
-      } catch (redirectError) {
-        console.error("Redirect error:", redirectError);
-        setError((redirectError as Error).message || "Failed to process sign-in redirect");
-      }
-    };
-    
-    checkRedirect();
+
     
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       console.log("Auth state changed:", currentUser ? `Logged in as ${currentUser.displayName || currentUser.email}` : "Not logged in");

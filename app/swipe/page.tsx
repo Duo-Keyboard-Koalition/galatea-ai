@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { recordSwipe } from "@/lib/matchService";
 import { useAuth } from "@/components/AuthContext";
 import { ChevronLeft, ChevronRight, X, Heart } from "lucide-react";
 
@@ -118,7 +117,6 @@ const Sidebar = ({ stats }: SidebarProps) => (
   </div>
 );
 
-
 // Match notification component
 const MatchNotification = ({ name }: { name: string }) => (
   <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70">
@@ -147,7 +145,11 @@ const ImageCarousel = ({
   onNavigate: (direction: "prev" | "next") => void;
   isMobile?: boolean;
 }) => (
-  <div className={`${isMobile ? 'w-full h-full' : 'md:w-1/2 h-[40vh] md:h-full'} relative`}>
+  <div
+    className={`${
+      isMobile ? "w-full h-full" : "md:w-1/2 h-[40vh] md:h-full"
+    } relative`}
+  >
     <div className="relative h-full w-full">
       <Image
         src={image}
@@ -180,23 +182,27 @@ const ImageCarousel = ({
       </div>
 
       {/* Image counter */}
-      <div className={`absolute ${isMobile ? 'bottom-16' : 'bottom-4'} left-0 right-0 flex justify-center`}>
+      <div
+        className={`absolute ${
+          isMobile ? "bottom-16" : "bottom-4"
+        } left-0 right-0 flex justify-center`}
+      >
         <div className="bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
           {currentIndex + 1} / {totalImages}
         </div>
       </div>
-      
+
       {/* Overlay buttons for mobile view */}
       {isMobile && (
         <div className="absolute bottom-20 left-0 right-0 flex justify-center space-x-16 z-10">
-          <button 
+          <button
             className="bg-white bg-opacity-90 text-gray-800 rounded-full w-16 h-16 flex items-center justify-center shadow-lg"
             onClick={() => onNavigate("prev")}
             aria-label="Previous"
           >
             <ChevronLeft size={28} />
           </button>
-          <button 
+          <button
             className="bg-white bg-opacity-90 text-gray-800 rounded-full w-16 h-16 flex items-center justify-center shadow-lg"
             onClick={() => onNavigate("next")}
             aria-label="Next"
@@ -313,17 +319,17 @@ const ProfileInfo = ({
 const ProfileInfoModal = ({
   profile,
   isOpen,
-  onClose
+  onClose,
 }: {
   profile: Profile;
   isOpen: boolean;
   onClose: () => void;
 }) => {
   if (!isOpen) return null;
-  
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div 
+      <div
         className="absolute inset-0 bg-black bg-opacity-70"
         onClick={onClose}
       ></div>
@@ -332,16 +338,27 @@ const ProfileInfoModal = ({
           className="absolute top-2 right-2 bg-rose-100 p-2 rounded-full text-earth-600"
           onClick={onClose}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
-        
+
         <div className="p-5">
           <h2 className="text-2xl font-bold text-earth-800 mb-2">
             {profile.name}, {profile.age}
           </h2>
-          
+
           {profile.location && (
             <div className="text-earth-600 mb-4 flex items-center">
               <svg
@@ -367,12 +384,12 @@ const ProfileInfoModal = ({
               {profile.location}
             </div>
           )}
-          
+
           <div className="mb-5">
             <h3 className="font-semibold text-earth-800 mb-2">About</h3>
             <p className="text-earth-700">{profile.bio}</p>
           </div>
-          
+
           {profile.interests && (
             <div className="mb-6">
               <h3 className="font-semibold text-earth-800 mb-2">Interests</h3>
@@ -393,7 +410,6 @@ const ProfileInfoModal = ({
     </div>
   );
 };
-
 
 // Profile card component - modified for full-height mobile view
 const ProfileCard = ({
@@ -416,7 +432,7 @@ const ProfileCard = ({
   totalProfiles: number;
 }) => {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
-  
+
   return (
     <div className="w-full md:h-[calc(100vh-64px)] h-[calc(100vh-64px)] flex flex-col md:flex-row">
       {/* For desktop: standard side-by-side layout */}
@@ -438,7 +454,7 @@ const ProfileCard = ({
           />
         </Card>
       </div>
-      
+
       {/* For mobile: full-height container with just the image */}
       <div className="md:hidden w-full h-full">
         <ImageCarousel
@@ -449,7 +465,7 @@ const ProfileCard = ({
           onNavigate={onImageNav}
           isMobile={true}
         />
-        
+
         {/* Mobile action buttons */}
         <div className="absolute bottom-24 right-4 flex flex-col space-y-3 z-30">
           <button
@@ -467,34 +483,47 @@ const ProfileCard = ({
             <X size={24} />
           </button>
         </div>
-        
+
         {/* Info button that opens the profile modal */}
-        <button 
+        <button
           className="absolute bottom-24 left-4 bg-white bg-opacity-90 text-gray-800 rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-30"
           onClick={() => setInfoModalOpen(true)}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
         </button>
-        
+
         {/* Profile info modal */}
-        <ProfileInfoModal 
-          profile={profile} 
-          isOpen={infoModalOpen} 
-          onClose={() => setInfoModalOpen(false)} 
+        <ProfileInfoModal
+          profile={profile}
+          isOpen={infoModalOpen}
+          onClose={() => setInfoModalOpen(false)}
         />
       </div>
     </div>
   );
 };
 
-
-
-
-
 // Error state component
-const ErrorState = ({ error, onRetry }: { error: string; onRetry: () => void }) => (
+const ErrorState = ({
+  error,
+  onRetry,
+}: {
+  error: string;
+  onRetry: () => void;
+}) => (
   <div className="h-screen flex items-center justify-center bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
     <Card className="p-8 max-w-md text-center">
       <h2 className="text-2xl font-bold text-earth-800 mb-4">
@@ -512,7 +541,13 @@ const ErrorState = ({ error, onRetry }: { error: string; onRetry: () => void }) 
 );
 
 // No profiles component
-const NoProfiles = ({ onReset, onGoToProfile }: { onReset: () => void; onGoToProfile: () => void }) => (
+const NoProfiles = ({
+  onReset,
+  onGoToProfile,
+}: {
+  onReset: () => void;
+  onGoToProfile: () => void;
+}) => (
   <div className="h-screen flex items-center justify-center bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
     <Card className="p-8 max-w-md text-center">
       <h2 className="text-2xl font-bold text-earth-800 mb-4">
@@ -549,18 +584,18 @@ export default function SwipePage() {
   const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [swiping, setSwiping] = useState(false);
-  const [matchFound, setMatchFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authError, setAuthError] = useState(false);
-  
+  const [matchFound, setMatchFound] = useState(false);
+
   const getStats = () => {
     return {
       newMatches: 2,
       messages: 2,
     };
   };
-  
-   useEffect(() => {
+
+  useEffect(() => {
     // If auth is still loading, wait
     if (authLoading) return;
 
@@ -574,50 +609,16 @@ export default function SwipePage() {
     const loadProfiles = async () => {
       try {
         setLoading(true);
-        // In a real app, you would fetch from your API
-        const mockProfiles: Profile[] = [
-          {
-            id: "1",
-            name: "Mekkana",
-            age: 25,
-            bio: "Creative artist with a passion for digital art and design. I love spending my weekends at galleries and exploring new coffee shops in the city.",
-            images: [
-              "/girl-profiles/mekkana-profile.png",
-              "/girl-profiles/mekkana-profile-2.png",
-              "/girl-profiles/mekkana-profile-3.png",
-            ],
-            interests: ["Art", "Photography", "Coffee"],
-            location: "New York City",
-          },
-          {
-            id: "2",
-            name: "Eliana",
-            age: 23,
-            bio: "Bookworm who loves cozy evenings and philosophical discussions. When I'm not reading, you can find me hiking or trying new recipes.",
-            images: [
-              "/girl-profiles/eliana-profile.jpg",
-              "/girl-profiles/eliana-profile-2.jpg",
-              "/girl-profiles/eliana-profile-3.jpg",
-            ],
-            interests: ["Books", "Hiking", "Cooking"],
-            location: "San Francisco",
-          },
-          {
-            id: "3",
-            name: "Zara",
-            age: 27,
-            bio: "Adventure seeker with a love for hiking and photography. My goal is to visit every national park before turning 30.",
-            images: [
-              "/girl-profiles/zara-profile.jpg",
-              "/girl-profiles/zara-profile-2.jpg",
-              "/girl-profiles/zara-profile-3.jpg",
-            ],
-            interests: ["Travel", "Outdoors", "Photography"],
-            location: "Denver",
-          },
-        ];
 
-        setProfiles(mockProfiles);
+        // Fetch profiles from the API
+        const response = await fetch("/api/profiles");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch profiles");
+        }
+
+        const data = await response.json();
+        setProfiles(data.profiles);
       } catch (error) {
         console.error("Error loading profiles:", error);
         setError("Failed to load profiles. Please try again later.");
@@ -631,34 +632,29 @@ export default function SwipePage() {
 
   const handleSwipe = async (direction: "left" | "right") => {
     if (!user || swiping || currentProfileIndex >= profiles.length) return;
-
+  
     setSwiping(true);
     try {
       const currentProfile = profiles[currentProfileIndex];
-      console.log(
-        `Recording swipe ${direction} for profile ${currentProfile.id}`
-      );
-
-      // Record the swipe in Firestore
-      await recordSwipe(user.uid, currentProfile.id, direction);
-
-      // If it's a right swipe, show match notification
+      
+      console.log(`User ${user.uid} swiped ${direction} on profile ${currentProfile.id} (${currentProfile.name})`);
+      
+      // Simulate match found
       if (direction === "right") {
         setMatchFound(true);
-        console.log(`Match created with ${currentProfile.name}`);
-        setTimeout(() => {
-          setMatchFound(false);
-        }, 2000);
+        setTimeout(() => setMatchFound(false), 3000); // Hide notification after 3 seconds
       }
-
+      console.log(`User ${user.uid} swiped ${direction} on profile ${currentProfile.id} (${currentProfile.name})`);
+  
+  
       // Reset image index for next profile
       setCurrentImageIndex(0);
-
+  
       // Move to next profile
       setCurrentProfileIndex((prev) => prev + 1);
     } catch (error) {
-      console.error("Error recording swipe:", error);
-      setError("Failed to record your preference. Please try again.");
+      console.error("Error handling swipe:", error);
+      setError("Something went wrong. Please try again.");
     } finally {
       setSwiping(false);
     }
@@ -721,16 +717,18 @@ export default function SwipePage() {
 
   // Error state
   if (error) {
-    return <ErrorState error={error} onRetry={() => window.location.reload()} />;
+    return (
+      <ErrorState error={error} onRetry={() => window.location.reload()} />
+    );
   }
 
   // No more profiles
   const currentProfile = profiles[currentProfileIndex];
   if (!currentProfile) {
     return (
-      <NoProfiles 
-        onReset={() => setCurrentProfileIndex(0)} 
-        onGoToProfile={() => router.push("/profile")} 
+      <NoProfiles
+        onReset={() => setCurrentProfileIndex(0)}
+        onGoToProfile={() => router.push("/profile")}
       />
     );
   }
@@ -744,7 +742,7 @@ export default function SwipePage() {
       <div className="flex-1 flex flex-col">
         <main className="flex-1 p-0 relative">
           {matchFound && <MatchNotification name={currentProfile.name} />}
-          <ProfileCard 
+          <ProfileCard
             profile={currentProfile}
             currentImageIndex={currentImageIndex}
             totalImages={totalImages}

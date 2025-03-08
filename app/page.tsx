@@ -12,7 +12,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
 import { useEffect } from "react";
-import { handleAuthRedirect } from "@/lib/auth";
 
 export default function Home() {
   const { user } = useAuth();
@@ -23,22 +22,7 @@ export default function Home() {
       router.push('/swipe');  // If already signed in, redirect to swipe page
     }
   }, [user, router]);
-  useEffect(() => {
-    const handleRedirect = async () => {
-      try {
-        console.log("Checking for auth redirect...");
-        const redirectUser = await handleAuthRedirect();
-        if (redirectUser) {
-          console.log("Redirect successful! User data:", redirectUser);
-          router.push("/swipe");
-        }
-      } catch (error) {
-        console.error("Error handling redirect:", error);
-      }
-    };
 
-    handleRedirect();
-  }, [router]);
 
   const handleStartSwiping = async () => {
     setIsLoading(true);
