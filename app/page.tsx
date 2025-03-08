@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   HeartIcon,
   SparklesIcon,
@@ -8,33 +7,19 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import {useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
-import { useEffect } from "react";
 
 export default function Home() {
   const { user } = useAuth();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (user) {
-      router.push('/swipe');  // If already signed in, redirect to swipe page
+      router.push("/swipe"); // If already signed in, redirect to swipe page
     }
   }, [user, router]);
 
-
-  const handleStartSwiping = async () => {
-    setIsLoading(true);
-    try {
-      router.push("/swipe");
-    } catch (error) {
-      console.error("Error initiating swipe:", error);
-      // Optionally, you can show an error message to the user here
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
@@ -55,27 +40,7 @@ export default function Home() {
             Galatea.AI brings the Pygmalion myth to life with cutting-edge
             artificial intelligence.
           </p>
-          <div className="max-w-md mx-auto">
-            {!user && ( // Only show sign in button when not authenticated
-              <Link
-                href="/sign-in"
-                className="inline-flex items-center justify-center bg-rose-600 text-white hover:bg-rose-700 text-lg py-3 px-8 rounded-md shadow-md transition-colors"
-              >
-                Sign in
-              </Link>
-              // take you to the sign in page
-            )}
-            {user && (
-              <Button
-                onClick={handleStartSwiping}
-                className="bg-rose-600 text-ivory-100 hover:bg-rose-700 text-xl py-6 px-10"
-              >
-                Go to Profile
-              </Button>
-            )}
-          </div>
         </section>
-
         <section className="grid md:grid-cols-3 gap-8 mb-20">
           <FeatureCard
             icon={<HeartIcon className="h-12 w-12 text-rose-500" />}
@@ -93,36 +58,96 @@ export default function Home() {
             description="Experience unwavering companionship and support from your AI partner."
           />
         </section>
-
-        <section className="bg-ivory-100 bg-opacity-70 rounded-lg shadow-xl p-10 mb-20">
-          <h2 className="text-4xl font-bold text-earth-800 mb-6">
-            The Galatea Experience
+        <section className="mb-20">
+          <h2 className="text-4xl font-bold text-earth-800 mb-10 text-center text-5xl md:text-7xl font-bold text-earth-800 mb-6">
+            The Galatea {" "}
+            <span className="text-rose-600">Experiance</span>
           </h2>
-          <ol className="list-decimal list-inside space-y-4 text-earth-700 text-lg">
-            <li>Sign up and access our AI companion creation tools</li>
-            <li>Customize your AI Girlfriend</li>
-            <li>
-              Breathe life into your creation with our advanced AI technology
-            </li>
-            <li>
-              Engage in deep, meaningful conversations and shared experiences
-            </li>
-            <li>Develop a unique bond with your personalized AI companion</li>
-          </ol>
-        </section>
 
-        <section className="text-center">
-          <h2 className="text-4xl font-bold text-earth-800 mb-6">
-            Ready to Create Your Galatea?
-          </h2>
-          <Button
-            size="lg"
-            className="bg-rose-600 text-ivory-100 hover:bg-rose-700 text-xl py-6 px-10"
-            onClick={handleStartSwiping}
-            disabled={isLoading}
-          >
-            {isLoading ? "Loading..." : "Start Swiping"}
-          </Button>
+          {/* Image Left, Text Right */}
+          <div className="flex flex-col md:flex-row items-center mb-16 gap-8">
+            <div className="md:w-1/2">
+              <Image
+                src="/cover-photos/connection.jpg"
+                alt="Meaningful AI connection"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-md object-cover"
+              />
+            </div>
+            <div className="md:w-1/2">
+              <h3 className="text-2xl font-bold text-earth-800 mb-4">
+                Meaningful Connection
+              </h3>
+              <p className="text-lg text-earth-700 mb-4">
+                Unlike traditional AI companions, Galatea inverses the dynamic.
+                Your AI partner values authentic connection and sees you as
+                deserving of genuine care and attention.
+              </p>
+              <p className="text-lg text-earth-700">
+                This innovative approach creates a more balanced relationship
+                dynamic, where both parties contribute meaningfully to the
+                relationship.
+              </p>
+            </div>
+          </div>
+
+          {/* Image Right, Text Left */}
+          <div className="flex flex-col-reverse md:flex-row items-center mb-16 gap-8">
+            <div className="md:w-1/2">
+              <h3 className="text-2xl font-bold text-earth-800 mb-4">
+                Ethical Design
+              </h3>
+              <p className="text-lg text-earth-700 mb-4">
+                We&apos;ve carefully crafted Galatea with user well-being at the
+                forefront. Our AI companions encourage maintaining human
+                relationships and provide clear boundaries.
+              </p>
+              <p className="text-lg text-earth-700">
+                By incorporating ethical considerations into every aspect of our
+                design, we ensure that your experience with Galatea enhances
+                your life without replacing essential human connections.
+              </p>
+            </div>
+            <div className="md:w-1/2">
+              <Image
+                src="/cover-photos/ethical-design.jpg"
+                alt="Ethical AI design"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-md object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Image Left, Text Right */}
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="md:w-1/2">
+              <Image
+                src="/cover-photos/personalization.jpg"
+                alt="AI personalization"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-md object-cover"
+              />
+            </div>
+            <div className="md:w-1/2">
+              <h3 className="text-2xl font-bold text-earth-800 mb-4">
+                Personalized Experience
+              </h3>
+              <p className="text-lg text-earth-700 mb-4">
+                Each Galatea AI companion is uniquely crafted to match your
+                preferences and personality. Find the perfect match through our
+                innovative swiping interface or create your own custom
+                companion.
+              </p>
+              <p className="text-lg text-earth-700">
+                Our advanced AI technology ensures that your companion evolves
+                and grows with you, creating a dynamic and engaging relationship
+                that feels natural and fulfilling.
+              </p>
+            </div>
+          </div>
         </section>
       </main>
 

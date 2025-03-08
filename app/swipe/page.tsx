@@ -117,18 +117,6 @@ const Sidebar = ({ stats }: SidebarProps) => (
   </div>
 );
 
-// Match notification component
-const MatchNotification = ({ name }: { name: string }) => (
-  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70">
-    <div className="bg-white p-8 rounded-lg text-center animate-bounce">
-      <h2 className="text-3xl font-bold text-rose-600 mb-2">
-        It&apos;s a Match!
-      </h2>
-      <p className="text-earth-700">You matched with {name}</p>
-    </div>
-  </div>
-);
-
 // Image carousel component with mobile optimization
 const ImageCarousel = ({
   image,
@@ -540,28 +528,47 @@ const ErrorState = ({
   </div>
 );
 
-// No profiles component
-const NoProfiles = ({
-  onReset,
-  onGoToProfile,
-}: {
-  onReset: () => void;
-  onGoToProfile: () => void;
+// Add these components before the SwipePage component:
+// make the match datastructure
+interface match {
+  id: string;
+  profile: Profile;
+}
+// Component to display matches
+const MatchesList = ({ matches, onViewMatches, onReset }: { 
+  matches: match[], 
+  onViewMatches: () => void,
+  onReset: () => void 
 }) => (
   <div className="h-screen flex items-center justify-center bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
-    <Card className="p-8 max-w-md text-center">
-      <h2 className="text-2xl font-bold text-earth-800 mb-4">
-        No More Profiles
+    <Card className="p-8 max-w-md">
+      <h2 className="text-2xl font-bold text-earth-800 mb-4 text-center">
+        You Have Matches! 🎉
       </h2>
-      <p className="text-earth-600 mb-6">
-        You&apos;ve seen all available profiles for now.
+      <p className="text-earth-600 mb-6 text-center">
+        You&apos;ve matched with {matches.length} {matches.length === 1 ? 'person' : 'people'}!
       </p>
+      <div className="flex flex-wrap justify-center gap-4 mb-6">
+        {matches.slice(0, 4).map((match) => (
+          <div key={match.id} className="text-center">
+            <div className="w-16 h-16 relative rounded-full overflow-hidden mb-1">
+              <Image 
+                src={match.profile.images[0]} 
+                alt={match.profile.name} 
+                fill 
+                style={{ objectFit: "cover" }}
+              />
+            </div>
+            <div className="text-xs text-earth-700">{match.profile.name}</div>
+          </div>
+        ))}
+      </div>
       <div className="flex flex-col space-y-3">
         <Button
           className="bg-rose-600 hover:bg-rose-700 text-white"
-          onClick={onGoToProfile}
+          onClick={onViewMatches}
         >
-          Go to Profile
+          View All Matches
         </Button>
         <Button
           variant="outline"
@@ -575,6 +582,37 @@ const NoProfiles = ({
   </div>
 );
 
+// Component to display when no matches are found
+const NoMatches = ({ onReset, onGoToProfile }: { 
+  onReset: () => void, 
+  onGoToProfile: () => void 
+}) => (
+  <div className="h-screen flex items-center justify-center bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
+    <Card className="p-8 max-w-md text-center">
+      <h2 className="text-2xl font-bold text-earth-800 mb-4">
+        No Matches Yet
+      </h2>
+      <p className="text-earth-600 mb-6">
+        You&apos;ve swiped through everyone! There are plenty of fish in the sea, but none have matched with you yet.
+      </p>
+      <div className="flex flex-col space-y-3">
+        <Button
+          className="bg-rose-600 hover:bg-rose-700 text-white"
+          onClick={onGoToProfile}
+        >
+          Update Your Profile
+        </Button>
+        <Button
+          variant="outline"
+          className="border-rose-300 text-rose-600 hover:bg-rose-50"
+          onClick={onReset}
+        >
+          Start Over
+        </Button>
+      </div>
+    </Card>
+  </div>
+);
 // Main SwipePage component
 export default function SwipePage() {
   const router = useRouter();
@@ -586,8 +624,10 @@ export default function SwipePage() {
   const [swiping, setSwiping] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authError, setAuthError] = useState(false);
-  const [matchFound, setMatchFound] = useState(false);
-
+  const [matches, setMatches] = useState<match[]>([]);
+  const [loadingMatches, setLoadingMatches] = useState(false);
+  // Add a flag to prevent repeated calls
+  const [matchesFetched, setMatchesFetched] = useState(false);
   const getStats = () => {
     return {
       newMatches: 2,
@@ -640,10 +680,10 @@ export default function SwipePage() {
       console.log(`User ${user.uid} swiped ${direction} on profile ${currentProfile.id} (${currentProfile.name})`);
       
       // Simulate match found
-      if (direction === "right") {
-        setMatchFound(true);
-        setTimeout(() => setMatchFound(false), 3000); // Hide notification after 3 seconds
-      }
+      // if (direction === "right") {
+      //   setMatchFound(true);
+      //   setTimeout(() => setMatchFound(false), 3000); // Hide notification after 3 seconds
+      // }
       console.log(`User ${user.uid} swiped ${direction} on profile ${currentProfile.id} (${currentProfile.name})`);
   
   
@@ -671,6 +711,38 @@ export default function SwipePage() {
       setCurrentImageIndex((prev) => (prev - 1 + imageCount) % imageCount);
     }
   };
+  // Add effect to fetch matches when profiles are exhausted
+  useEffect(() => {
+    // Only fetch matches when we've run out of profiles, aren't already loading them,
+    // haven't fetched them before, and user is authenticated
+    if (!profiles[currentProfileIndex] && !loadingMatches && !matchesFetched && user) {
+      const fetchMatches = async () => {
+        try {
+          setLoadingMatches(true);
+          
+          // Fetch matches from API
+          const response = await fetch(`/api/matches?userId=${user.uid}`);
+          
+          if (!response.ok) {
+            throw new Error("Failed to fetch matches");
+          }
+          
+          const data = await response.json();
+          setMatches(data.matches || []);
+          // Mark that we've fetched matches
+          setMatchesFetched(true);
+        } catch (error) {
+          console.error("Error loading matches:", error);
+          setError("Failed to load matches. Please try again later.");
+        } finally {
+          setLoadingMatches(false);
+        }
+      };
+
+      fetchMatches();
+    }
+  }, [currentProfileIndex, profiles, loadingMatches, matchesFetched, user]);
+
   // Authentication error handling
   if (authError) {
     return (
@@ -725,14 +797,71 @@ export default function SwipePage() {
   // No more profiles
   const currentProfile = profiles[currentProfileIndex];
   if (!currentProfile) {
+    // If matches are still loading, show a loading state
+    if (loadingMatches) {
+      return (
+        <div className="h-screen flex items-center justify-center bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-600"></div>
+            <div className="text-2xl text-earth-800">Checking for matches...</div>
+          </div>
+        </div>
+      );
+    }
+    
+    // If we have matches, show the matches list
+    if (matches && matches.length > 0) {
+      return (
+        <MatchesList
+          matches={matches}
+          onViewMatches={() => router.push("/matches")}
+          onReset={() => {
+            setMatches([]);
+            setCurrentProfileIndex(0);
+            setMatchesFetched(false); // Reset this flag when restarting
+            // Reload profiles
+            setLoading(true);
+            fetch("/api/profiles")
+              .then(res => res.json())
+              .then(data => {
+                setProfiles(data.profiles);
+                setLoading(false);
+              })
+              .catch(err => {
+                console.error("Error reloading profiles:", err);
+                setError("Failed to reload profiles");
+              });
+          }}
+        />
+      );
+    }
+    
+    // If no matches, show the no matches view
     return (
-      <NoProfiles
-        onReset={() => setCurrentProfileIndex(0)}
+      <NoMatches
+        onReset={() => {
+          // Similar reset logic as above
+          setMatches([]);
+          setCurrentProfileIndex(0);
+          setMatchesFetched(false); // Reset this flag when restarting
+          setLoading(true);
+          fetch("/api/profiles")
+            .then(res => res.json())
+            .then(data => {
+              setProfiles(data.profiles);
+              setLoading(false);
+            })
+            .catch(err => {
+              console.error("Error reloading profiles:", err);
+              setError("Failed to reload profiles");
+            });
+        }}
         onGoToProfile={() => router.push("/profile")}
       />
     );
   }
 
+  // Define totalImages here, after confirming currentProfile exists
   const totalImages = currentProfile.images.length;
 
   // Main interface with components
@@ -741,7 +870,6 @@ export default function SwipePage() {
       <Sidebar stats={getStats()} />
       <div className="flex-1 flex flex-col">
         <main className="flex-1 p-0 relative">
-          {matchFound && <MatchNotification name={currentProfile.name} />}
           <ProfileCard
             profile={currentProfile}
             currentImageIndex={currentImageIndex}

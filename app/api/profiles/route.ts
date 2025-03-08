@@ -44,6 +44,56 @@ export async function GET() {
       interests: ["Travel", "Outdoors", "Photography"],
       location: "Denver",
     },
+    {
+      id: "4",
+      name: "Sophia",
+      age: 27,
+      bio: "Professional dancer and yoga instructor. I believe in living mindfully and finding balance in life. Love hiking and being outdoors whenever possible.",
+      images: [
+        "/girl-profiles/sophia-profile.png", 
+        "/girl-profiles/sophia-profile-2.png",
+        "/girl-profiles/sophia-profile-3.png"
+      ],
+      interests: ["Yoga", "Dance", "Hiking", "Meditation"],
+      location: "Los Angeles",
+    },
+    {
+      id: "5",
+      name: "Emma",
+      age: 24,
+      bio: "Software engineer by day, amateur chef by night. I enjoy coding challenges almost as much as I enjoy trying out new recipes. Looking for someone to share my culinary experiments with!",
+      images: [
+        "/girl-profiles/emma-profile.png", 
+        "/girl-profiles/emma-profile-2.png", 
+        "/girl-profiles/emma-profile-3.png"
+      ],
+      interests: ["Cooking", "Technology", "Reading", "Travel"],
+      location: "San Francisco",
+    },
+    {
+      id: "6",
+      name: "Olivia",
+      age: 26,
+      bio: "Marine biologist with a passion for ocean conservation. I spend most weekends either at the beach or volunteering at local clean-up events. Looking for someone who appreciates nature as much as I do.",
+      images: [
+        "/girl-profiles/olivia-profile.png", 
+        "/girl-profiles/olivia-profile-2.png", 
+      ],
+      interests: ["Ocean Conservation", "Scuba Diving", "Environmental Science"],
+      location: "San Diego",
+    },
+    {
+      id: "7",
+      name: "Isabella",
+      age: 28,
+      bio: "Concert pianist and music teacher. When I'm not practicing or performing, I'm probably at a live music venue or exploring vintage record stores. Music is my language of love.",
+      images: [
+        "/girl-profiles/isabella-profile.png", 
+        "/girl-profiles/isabella-profile-2.png",
+      ],
+      interests: ["Classical Music", "Jazz", "Teaching", "Piano"],
+      location: "Boston",
+    }
   ];
 
   return NextResponse.json({ profiles });

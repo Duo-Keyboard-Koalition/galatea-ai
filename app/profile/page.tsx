@@ -97,10 +97,6 @@ export default function Profile() {
       } else {
         // No user is authenticated
         setAuthError(true);
-        // Wait briefly before redirecting so user sees error message
-        setTimeout(() => {
-          router.push('/sign-in');
-        }, 2000);
       }
       
       setLoading(false);

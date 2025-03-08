@@ -93,7 +93,6 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
     try {
       setLoading(true);
       await firebaseSignOut(auth);
-      router.push("/");
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error during sign out:", error);
