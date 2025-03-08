@@ -27,8 +27,8 @@ export default function SignInPage() {
       try {
         const result = await getRedirectResult(auth);
         if (result?.user) {
-          console.log("Sign-in successful, redirecting to home");
-          router.push('/'); // Redirect to home after successful sign-in
+          console.log("Sign-in successful, redirecting to swipe page");
+          router.push('/swipe'); // Redirect to swipe page after successful sign-in
         }
       } catch (error) {
         console.error("Redirect error:", error);

@@ -30,9 +30,11 @@ export const handleAuthRedirect = async () => {
     if (result) {
       const user = result.user;
       console.log("User from redirect:", user);
-      return user;
+      
+      // Return both user and a success flag to indicate redirection should happen
+      return { user, success: true };
     }
-    return null;
+    return { user: null, success: false };
   } catch (error) {
     console.error("Error handling redirect:", error);
     throw error;

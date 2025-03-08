@@ -60,6 +60,9 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
         if (result && result.user) {
           console.log("Redirect sign-in successful:", result.user.displayName);
           // No need to set user manually, onAuthStateChanged will handle it
+          
+          // Redirect to swipe page after successful sign-in
+          router.push('/swipe');
         }
       } catch (redirectError) {
         console.error("Redirect error:", redirectError);
@@ -73,6 +76,11 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
       console.log("Auth state changed:", currentUser ? `Logged in as ${currentUser.displayName || currentUser.email}` : "Not logged in");
       setUser(currentUser);
       setLoading(false);
+      
+      // If user just signed in, redirect to swipe page
+      if (currentUser && !user) {
+        router.push('/swipe');
+      }
     }, (authError) => {
       console.error("Auth state error:", authError);
       setError(authError.message);
