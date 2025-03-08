@@ -11,15 +11,41 @@ import { saveUserProfile, uploadProfileImage, getUserProfile } from "@/lib/userP
 import { User } from "firebase/auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+// Define proper types for the profile
+interface UserProfile {
+  displayName?: string;
+  bio?: string;
+  age?: string;
+  interests?: string;
+  location?: string;
+  userId: string;
+  email?: string;
+  photoURL?: string;
+  lastUpdated?: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  provider?: string;
+}
+
+interface FormData {
+  displayName: string;
+  bio: string;
+  age: string;
+  interests: string;
+  location: string;
+}
+
 export default function Profile() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [profileImage, setProfileImage] = useState(null);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     displayName: '',
     bio: '',
     age: '',
@@ -32,23 +58,26 @@ export default function Profile() {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
+        setAuthError(false);
         console.log("User authenticated:", currentUser);
         
         try {
           const userProfile = await getUserProfile(currentUser.uid);
-          setProfile(userProfile);
+          setProfile(userProfile as UserProfile);
           
           if (userProfile) {
             setFormData({
-              displayName: userProfile.displayName || currentUser.displayName || '',
-              bio: userProfile.bio || '',
-              age: userProfile.age || '',
-              interests: userProfile.interests || '',
-              location: userProfile.location || '',
+              displayName: String(userProfile?.displayName || currentUser?.displayName || ''),
+              bio: String(userProfile?.bio || ''),
+              age: String(userProfile?.age || ''),
+              interests: String(userProfile?.interests || ''),
+              location: String(userProfile?.location || ''),
             });
             
             if (userProfile.photoURL) {
-              setImagePreview(userProfile.photoURL);
+              if (typeof userProfile.photoURL === 'string') {
+                setImagePreview(userProfile.photoURL);
+              }
             } else if (currentUser.photoURL) {
               setImagePreview(currentUser.photoURL);
             }
@@ -66,7 +95,12 @@ export default function Profile() {
           console.error("Error loading profile:", error);
         }
       } else {
-        router.push('/sign-in');
+        // No user is authenticated
+        setAuthError(true);
+        // Wait briefly before redirecting so user sees error message
+        setTimeout(() => {
+          router.push('/sign-in');
+        }, 2000);
       }
       
       setLoading(false);
@@ -75,7 +109,7 @@ export default function Profile() {
     return () => unsubscribe();
   }, [router]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -83,9 +117,10 @@ export default function Profile() {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files[0]) {
+      const file = files[0];
       setProfileImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -105,16 +140,19 @@ export default function Profile() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user) {
+      setAuthError(true);
+      return;
+    }
     
     setSaving(true);
     try {
       const profileData = {
         ...formData,
         userId: user.uid,
-        email: user.email,
+        email: user.email || undefined,
         lastUpdated: new Date(),
         provider: user.providerData[0]?.providerId || 'unknown'
       };
@@ -127,7 +165,7 @@ export default function Profile() {
       
       // Update local profile state
       const updatedProfile = await getUserProfile(user.uid);
-      setProfile(updatedProfile);
+      setProfile(updatedProfile as UserProfile);
       
       alert("Profile saved successfully!");
     } catch (error) {
@@ -138,14 +176,40 @@ export default function Profile() {
     }
   };
 
-  if (loading) {
+  // If authentication error, show error page
+  if (authError) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
-        <div className="text-2xl text-earth-800">Loading...</div>
+        <Card className="p-8 max-w-md text-center">
+          <div className="text-rose-600 text-5xl mb-4">🔒</div>
+          <h2 className="text-2xl font-bold text-earth-800 mb-4">Authentication Required</h2>
+          <p className="text-earth-600 mb-6">
+            You must be signed in to view your profile. Redirecting to sign-in page...
+          </p>
+          <Button 
+            className="bg-rose-600 hover:bg-rose-700 text-white"
+            onClick={() => router.push('/sign-in')}
+          >
+            Sign In Now
+          </Button>
+        </Card>
       </div>
     );
   }
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
+        <div className="flex flex-col items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-600 mb-4"></div>
+          <div className="text-2xl text-earth-800">Loading profile...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Main profile content
   return (
     <div className="min-h-screen bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
       <main className="container mx-auto px-6 py-16">
@@ -192,7 +256,7 @@ export default function Profile() {
                 
                 {profile?.bio && (
                   <p className="text-earth-700 italic border-l-2 border-earth-200 pl-3 py-1">
-                    "{profile.bio}"
+                    &quot;{profile.bio}&quot;
                   </p>
                 )}
               </div>

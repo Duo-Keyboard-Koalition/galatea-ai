@@ -1,20 +1,23 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { HeartIcon, SparklesIcon, ShieldCheckIcon } from '@heroicons/react/24/outline'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { googleSignIn } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import {
+  HeartIcon,
+  SparklesIcon,
+  ShieldCheckIcon,
+} from "@heroicons/react/24/outline";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
-import { useEffect } from 'react';
-import { handleAuthRedirect } from '@/lib/auth';
+import { useEffect } from "react";
+import { handleAuthRedirect } from "@/lib/auth";
 
 export default function Home() {
-  const { user } = useAuth()
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const { user } = useAuth();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const handleRedirect = async () => {
       try {
@@ -22,93 +25,80 @@ export default function Home() {
         const redirectUser = await handleAuthRedirect();
         if (redirectUser) {
           console.log("Redirect successful! User data:", redirectUser);
-          router.push('/profile');
+          router.push("/profile");
         }
       } catch (error) {
         console.error("Error handling redirect:", error);
       }
     };
-    
+
     handleRedirect();
   }, [router]);
 
-  const handleGoogleSignIn = async () => {
-    try {
-      // Don't expect a return value - this will redirect away!
-      setIsLoading(true);
-      await googleSignIn();
-      // Code below will never run because of the redirect
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Google Sign In Error:", error);
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert("An unknown error occurred");
-      }
-    }
-  };
   const handleStartSwiping = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-       router.push('/profile')
+      router.push("/profile");
     } catch (error) {
-      console.error('Error initiating swipe:', error)
+      console.error("Error initiating swipe:", error);
       // Optionally, you can show an error message to the user here
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
-
       <main className="container mx-auto px-6 py-16">
         <section className="text-center mb-20">
-          <Image src="/favicon.png" alt="Galatea.AI Logo" width={120} height={120} className="mx-auto mb-8" />
+          <Image
+            src="/favicon.png"
+            alt="Galatea.AI Logo"
+            width={120}
+            height={120}
+            className="mx-auto mb-8"
+          />
           <h1 className="text-5xl md:text-7xl font-bold text-earth-800 mb-6">
-            Sculpt Your Perfect <span className="text-rose-600">AI Companion</span>
+            Sculpt Your Perfect{" "}
+            <span className="text-rose-600">AI Companion</span>
           </h1>
           <p className="text-xl md:text-2xl text-earth-600 mb-10 max-w-3xl mx-auto">
-            Galatea.AI brings the Pygmalion myth to life with cutting-edge artificial intelligence.
+            Galatea.AI brings the Pygmalion myth to life with cutting-edge
+            artificial intelligence.
           </p>
           <div className="max-w-md mx-auto">
-
-          {!user && ( // Only show sign in button when not authenticated
-  <Link 
-  href="/sign-in" 
-  className="inline-flex items-center justify-center bg-rose-600 text-white hover:bg-rose-700 text-lg py-3 px-8 rounded-md shadow-md transition-colors"
->
-  Sign in
-</Link>
+            {!user && ( // Only show sign in button when not authenticated
+              <Link
+                href="/sign-in"
+                className="inline-flex items-center justify-center bg-rose-600 text-white hover:bg-rose-700 text-lg py-3 px-8 rounded-md shadow-md transition-colors"
+              >
+                Sign in
+              </Link>
               // take you to the sign in page
-              
             )}
             {user && (
-              <Button 
+              <Button
                 onClick={handleStartSwiping}
                 className="bg-rose-600 text-ivory-100 hover:bg-rose-700 text-xl py-6 px-10"
               >
                 Go to Profile
               </Button>
-              
             )}
-
           </div>
         </section>
 
         <section className="grid md:grid-cols-3 gap-8 mb-20">
-          <FeatureCard 
+          <FeatureCard
             icon={<HeartIcon className="h-12 w-12 text-rose-500" />}
             title="Artistic Creation"
             description="Sculpt your ideal AI companion with our advanced personality customization tools."
           />
-          <FeatureCard 
+          <FeatureCard
             icon={<SparklesIcon className="h-12 w-12 text-rose-500" />}
             title="Bring to Life"
             description="Watch your creation come to life with AI-powered conversations and interactions."
           />
-          <FeatureCard 
+          <FeatureCard
             icon={<ShieldCheckIcon className="h-12 w-12 text-rose-500" />}
             title="Eternal Devotion"
             description="Experience unwavering companionship and support from your AI partner."
@@ -116,25 +106,33 @@ export default function Home() {
         </section>
 
         <section className="bg-ivory-100 bg-opacity-70 rounded-lg shadow-xl p-10 mb-20">
-          <h2 className="text-4xl font-bold text-earth-800 mb-6">The Galatea Experience</h2>
+          <h2 className="text-4xl font-bold text-earth-800 mb-6">
+            The Galatea Experience
+          </h2>
           <ol className="list-decimal list-inside space-y-4 text-earth-700 text-lg">
             <li>Sign up and access our AI companion creation tools</li>
             <li>Customize your AI Girlfriend</li>
-            <li>Breathe life into your creation with our advanced AI technology</li>
-            <li>Engage in deep, meaningful conversations and shared experiences</li>
+            <li>
+              Breathe life into your creation with our advanced AI technology
+            </li>
+            <li>
+              Engage in deep, meaningful conversations and shared experiences
+            </li>
             <li>Develop a unique bond with your personalized AI companion</li>
           </ol>
         </section>
 
         <section className="text-center">
-          <h2 className="text-4xl font-bold text-earth-800 mb-6">Ready to Create Your Galatea?</h2>
-          <Button 
-            size="lg" 
+          <h2 className="text-4xl font-bold text-earth-800 mb-6">
+            Ready to Create Your Galatea?
+          </h2>
+          <Button
+            size="lg"
             className="bg-rose-600 text-ivory-100 hover:bg-rose-700 text-xl py-6 px-10"
             onClick={handleStartSwiping}
             disabled={isLoading}
           >
-            {isLoading ? 'Loading...' : 'Start Swiping'}
+            {isLoading ? "Loading..." : "Start Swiping"}
           </Button>
         </section>
       </main>
@@ -146,24 +144,46 @@ export default function Home() {
               © 2024 Galatea.AI. All rights reserved.
             </div>
             <div className="flex space-x-6">
-              <Link href="/privacy" className="text-earth-600 hover:text-rose-700 transition-colors">Privacy Policy</Link>
-              <Link href="/terms" className="text-earth-600 hover:text-rose-700 transition-colors">Terms of Service</Link>
-              <Link href="/contact" className="text-earth-600 hover:text-rose-700 transition-colors">Contact Us</Link>
+              <Link
+                href="/privacy"
+                className="text-earth-600 hover:text-rose-700 transition-colors"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="/terms"
+                className="text-earth-600 hover:text-rose-700 transition-colors"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                href="/contact"
+                className="text-earth-600 hover:text-rose-700 transition-colors"
+              >
+                Contact Us
+              </Link>
             </div>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
     <div className="bg-ivory-100 bg-opacity-70 rounded-lg shadow-md p-8 text-center transition-transform hover:scale-105">
       <div className="flex justify-center mb-6">{icon}</div>
       <h3 className="text-2xl font-semibold text-earth-800 mb-4">{title}</h3>
       <p className="text-earth-600 text-lg">{description}</p>
     </div>
-  )
+  );
 }
-

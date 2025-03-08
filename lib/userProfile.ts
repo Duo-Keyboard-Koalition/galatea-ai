@@ -39,14 +39,21 @@ export const saveUserProfile = async (userId: string, profileData: Partial<UserP
 };
 
 // Get user profile
-export const getUserProfile = async (userId) => {
+interface UserProfileData {
+  userId: string;
+  updatedAt: Date;
+  createdAt?: Date;
+  [key: string]: string | number | boolean | Date | undefined; // Allow additional properties
+}
+
+export const getUserProfile = async (userId: string): Promise<UserProfileData | null> => {
   try {
     console.log(`Fetching profile from Firestore for user: ${userId}`);
     const docRef = doc(db, 'users', userId);
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
-      const data = docSnap.data();
+      const data = docSnap.data() as UserProfileData;
       console.log("Profile retrieved successfully");
       return data;
     } else {
@@ -61,7 +68,11 @@ export const getUserProfile = async (userId) => {
 };
 
 // Upload profile image
-export const uploadProfileImage = async (userId, file) => {
+interface UploadProfileImageResult {
+  downloadURL: string;
+}
+
+export const uploadProfileImage = async (userId: string, file: File): Promise<UploadProfileImageResult> => {
   try {
     const storageRef = ref(storage, `profile-images/${userId}`);
     await uploadBytes(storageRef, file);
@@ -80,7 +91,7 @@ export const uploadProfileImage = async (userId, file) => {
       });
     }
     
-    return downloadURL;
+    return { downloadURL };
   } catch (error) {
     console.error("Error uploading profile image:", error);
     throw error;
