@@ -23,6 +23,7 @@
     "firebase": "^10.14.1",
     "framer-motion": "^11.9.0",
     "lru-cache": "^11.0.2",
+    "lucide-react": "^0.479.0",
     "my-next-app": "file:",
     "next": "^14.2.13",
     "punycode.js": "^2.3.1",

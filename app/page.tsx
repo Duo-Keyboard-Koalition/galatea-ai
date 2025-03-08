@@ -19,13 +19,18 @@ export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
+    if (user) {
+      router.push('/swipe');  // If already signed in, redirect to swipe page
+    }
+  }, [user, router]);
+  useEffect(() => {
     const handleRedirect = async () => {
       try {
         console.log("Checking for auth redirect...");
         const redirectUser = await handleAuthRedirect();
         if (redirectUser) {
           console.log("Redirect successful! User data:", redirectUser);
-          router.push("/profile");
+          router.push("/swipe");
         }
       } catch (error) {
         console.error("Error handling redirect:", error);
@@ -38,7 +43,7 @@ export default function Home() {
   const handleStartSwiping = async () => {
     setIsLoading(true);
     try {
-      router.push("/profile");
+      router.push("/swipe");
     } catch (error) {
       console.error("Error initiating swipe:", error);
       // Optionally, you can show an error message to the user here

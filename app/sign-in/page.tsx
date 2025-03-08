@@ -15,7 +15,7 @@ export default function SignInPage() {
   // Check if user is already signed in
   useEffect(() => {
     if (user) {
-      router.push('/');  // If already signed in, redirect to home page
+      router.push('/swipe'); // Redirect to swipe page if user is already signed in
     }
   }, [user, router]);
 
