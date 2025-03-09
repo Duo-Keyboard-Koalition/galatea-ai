@@ -10,7 +10,7 @@ import Link from "next/link";
 import {useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
-
+import Navbar from '@/components/Navbar';
 export default function Home() {
   const { user } = useAuth();
   const router = useRouter();
@@ -24,6 +24,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
       <main className="container mx-auto px-6 py-16">
+      <Navbar />
         <section className="text-center mb-20">
           <Image
             src="/favicon.png"
@@ -33,7 +34,7 @@ export default function Home() {
             className="mx-auto mb-8"
           />
           <h1 className="text-5xl md:text-7xl font-bold text-earth-800 mb-6">
-            Sculpt Your Perfect{" "}
+            Find Your Perfect{" "}
             <span className="text-rose-600">AI Companion</span>
           </h1>
           <p className="text-xl md:text-2xl text-earth-600 mb-10 max-w-3xl mx-auto">
@@ -45,7 +46,7 @@ export default function Home() {
           <FeatureCard
             icon={<HeartIcon className="h-12 w-12 text-rose-500" />}
             title="Artistic Creation"
-            description="Sculpt your ideal AI companion with our advanced personality customization tools."
+            description="Find your ideal AI companion with our advanced personality customization tools."
           />
           <FeatureCard
             icon={<SparklesIcon className="h-12 w-12 text-rose-500" />}

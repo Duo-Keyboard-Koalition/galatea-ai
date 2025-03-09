@@ -93,6 +93,8 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    import('@tailwindcss/aspect-ratio'),
+  ],
 }
 

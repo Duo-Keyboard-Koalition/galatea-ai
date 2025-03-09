@@ -8,6 +8,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
 import { ChevronLeft, ChevronRight, X, Heart } from "lucide-react";
+// Import the new separate sidebar component
+import SwipeSidebar from "@/components/SwipeSidebar";
 
 // Define types for better type safety
 interface Profile {
@@ -20,102 +22,28 @@ interface Profile {
   location?: string;
 }
 
-interface SidebarProps {
-  stats: { newMatches: number; messages: number };
-}
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
 
-// Sidebar component for desktop navigation
-const Sidebar = ({ stats }: SidebarProps) => (
-  <div className="hidden md:block w-64 bg-white bg-opacity-90 shadow-md">
-    <div className="p-6">
-      <h2 className="text-xl font-bold text-earth-800 mb-4">Navigation</h2>
-      <nav className="space-y-2">
-        <Link
-          href="/swipe"
-          className="flex items-center px-4 py-3 bg-rose-50 text-rose-600 rounded-lg font-medium"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-          Discover Matches
-        </Link>
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerHeight > window.innerWidth);
+    };
 
-        <Link
-          href="/matches"
-          className="flex items-center px-4 py-3 text-earth-600 hover:bg-rose-50 hover:text-rose-600 rounded-lg"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
-          </svg>
-          My Matches
-        </Link>
+    // Initial check
+    handleResize();
 
-        <Link
-          href="/profile"
-          className="flex items-center px-4 py-3 text-earth-600 hover:bg-rose-50 hover:text-rose-600 rounded-lg"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-            />
-          </svg>
-          My Profile
-        </Link>
+    // Add event listener
+    window.addEventListener("resize", handleResize);
 
-        <div className="pt-4 mt-4 border-t border-gray-200">
-          <h3 className="text-sm font-semibold text-earth-500 mb-2 px-4">
-            Match Stats
-          </h3>
-          <div className="bg-ivory-50 rounded-lg p-3">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-earth-600">New Matches</span>
-              <span className="bg-rose-100 text-rose-600 text-xs py-1 px-2 rounded-full">
-                {stats.newMatches}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-earth-600">Messages</span>
-              <span className="bg-rose-100 text-rose-600 text-xs py-1 px-2 rounded-full">
-                {stats.messages}
-              </span>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </div>
-);
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return isMobile;
+};
 
 // Image carousel component with mobile optimization
 const ImageCarousel = ({
@@ -399,7 +327,7 @@ const ProfileInfoModal = ({
   );
 };
 
-// Profile card component - modified for full-height mobile view
+// Profile card component 
 const ProfileCard = ({
   profile,
   currentImageIndex,
@@ -409,6 +337,7 @@ const ProfileCard = ({
   swiping,
   currentProfileIndex,
   totalProfiles,
+  isMobile, 
 }: {
   profile: Profile;
   currentImageIndex: number;
@@ -418,13 +347,15 @@ const ProfileCard = ({
   swiping: boolean;
   currentProfileIndex: number;
   totalProfiles: number;
+  isMobile: boolean; 
 }) => {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
 
   return (
-    <div className="w-full md:h-[calc(100vh-64px)] h-[calc(100vh-64px)] flex flex-col md:flex-row">
+    // CHANGE: Updated to use full height without accounting for navbar space
+    <div className="w-full h-full flex flex-col md:flex-row">
       {/* For desktop: standard side-by-side layout */}
-      <div className="hidden md:flex w-full h-full">
+      <div className={`hidden ${!isMobile ? "md:flex" : ""} w-full h-full`}>
         <Card className="flex flex-row w-full h-full overflow-hidden shadow-xl rounded-none">
           <ImageCarousel
             image={profile.images[currentImageIndex]}
@@ -444,7 +375,7 @@ const ProfileCard = ({
       </div>
 
       {/* For mobile: full-height container with just the image */}
-      <div className="md:hidden w-full h-full">
+      <div className={`md:hidden ${isMobile ? "flex" : "hidden"} w-full h-full`}>
         <ImageCarousel
           image={profile.images[currentImageIndex]}
           name={profile.name}
@@ -626,8 +557,9 @@ export default function SwipePage() {
   const [authError, setAuthError] = useState(false);
   const [matches, setMatches] = useState<match[]>([]);
   const [loadingMatches, setLoadingMatches] = useState(false);
-  // Add a flag to prevent repeated calls
   const [matchesFetched, setMatchesFetched] = useState(false);
+  const isMobile = useIsMobile();
+
   const getStats = () => {
     return {
       newMatches: 2,
@@ -866,10 +798,11 @@ export default function SwipePage() {
 
   // Main interface with components
   return (
-    <div className="h-[calc(100vh-64px)] flex bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
-      <Sidebar stats={getStats()} />
-      <div className="flex-1 flex flex-col">
-        <main className="flex-1 p-0 relative">
+    <div className="h-screen w-screen flex overflow-hidden bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100 absolute top-0 left-0">
+      {/* Use the imported sidebar component instead of inline sidebar */}
+      <SwipeSidebar stats={getStats()} />
+      <div className="flex-1 flex flex-col h-full">
+        <main className="flex-1 h-full p-0">
           <ProfileCard
             profile={currentProfile}
             currentImageIndex={currentImageIndex}
@@ -879,6 +812,7 @@ export default function SwipePage() {
             swiping={swiping}
             currentProfileIndex={currentProfileIndex}
             totalProfiles={profiles.length}
+            isMobile={isMobile}
           />
         </main>
       </div>
