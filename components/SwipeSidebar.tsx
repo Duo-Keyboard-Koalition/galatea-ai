@@ -15,7 +15,7 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
   // Get the current path to determine which link is active
   const pathname = usePathname();
   const router = useRouter();
-  const {  signOut } = useAuth();
+  const {signOut } = useAuth();
 
   const handleSignOut = async () => {
     try {
@@ -27,8 +27,8 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
   };
 
   return (
-    <div className="hidden md:block w-64 bg-white bg-opacity-90 shadow-md flex flex-col h-full">
-      <div className="p-6 flex-1">
+    <div className="hidden md:flex w-64 bg-white bg-opacity-90 shadow-md flex-col h-screen">
+      <div className="p-6 flex-grow overflow-y-auto">
         <h2 className="text-xl font-bold text-earth-800 mb-4">Navigation</h2>
         <nav className="space-y-2">
           <Link
@@ -128,8 +128,8 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
         </nav>
       </div>
 
-      {/* Sign Out Button - added at the bottom of sidebar */}
-      <div className="p-4 border-t border-gray-200">
+      {/* Sign Out Button - stuck to the bottom of sidebar */}
+      <div className="p-4 border-t border-gray-200 mt-auto">
         <Button 
           onClick={handleSignOut}
           variant="outline"

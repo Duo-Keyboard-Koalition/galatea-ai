@@ -677,34 +677,9 @@ export default function SwipePage() {
 
   // Authentication error handling
   if (authError) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
-        <Card className="p-8 max-w-md text-center">
-          <div className="text-rose-600 text-5xl mb-4">🔒</div>
-          <h2 className="text-2xl font-bold text-earth-800 mb-4">
-            Authentication Required
-          </h2>
-          <p className="text-earth-600 mb-6">
-            You must be signed in to view potential matches.
-          </p>
-          <div className="flex flex-col space-y-3">
-            <Button
-              className="bg-rose-600 hover:bg-rose-700 text-white"
-              asChild
-            >
-              <Link href="/sign-in">Sign In</Link>
-            </Button>
-            <Button
-              variant="outline"
-              className="border-rose-300 text-rose-600 hover:bg-rose-50"
-              asChild
-            >
-              <Link href="/">Return to Home</Link>
-            </Button>
-          </div>
-        </Card>
-      </div>
-    );
+    // route to /
+    router.push("/");
+    return null;
   }
 
   // Loading state
