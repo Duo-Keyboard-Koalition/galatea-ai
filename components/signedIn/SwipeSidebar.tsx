@@ -5,18 +5,29 @@ import { usePathname, useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { performSignOut } from "@/lib/signout";
+import { useEffect } from "react";
+import { useAuth } from "@/components/AuthContext";
+import MatchModel, { useMatchStore } from "@/app/models/matchModel";
 
-interface SidebarProps {
-  stats: { newMatches: number; messages: number };
-}
-
-// Sidebar component for desktop navigation
-const SwipeSidebar = ({ stats }: SidebarProps) => {
-  // Get the current path to determine which link is active
+const SwipeSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
+  const { user } = useAuth();
+
+  const { matches, loading, fetchMatches, initialized } = useMatchStore();
+
+  useEffect(() => {
+    if (user?.uid && !initialized && !loading) {
+      fetchMatches(user.uid);
+    }
+  }, [user?.uid, initialized, loading, fetchMatches]);
+
+  const newMatches = matches.length;
+  const unreadMessages = MatchModel.getUnreadCount();
+
   const handleSignOut = async () => {
     try {
+      MatchModel.clearMatches();
       await performSignOut();
       router.push('/');
     } catch (error) {
@@ -33,8 +44,8 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
             href="/swipe"
             className={`flex items-center px-4 py-3 rounded-lg font-medium ${
               pathname === "/swipe"
-                ? "bg-rose-50 text-rose-600"  // Active style
-                : "text-earth-600 hover:bg-rose-50 hover:text-rose-600"  // Inactive style
+                ? "bg-rose-50 text-rose-600"
+                : "text-earth-600 hover:bg-rose-50 hover:text-rose-600"
             }`}
           >
             <svg
@@ -58,8 +69,8 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
             href="/matches"
             className={`flex items-center px-4 py-3 rounded-lg font-medium ${
               pathname === "/matches"
-                ? "bg-rose-50 text-rose-600"  // Active style
-                : "text-earth-600 hover:bg-rose-50 hover:text-rose-600"  // Inactive style
+                ? "bg-rose-50 text-rose-600"
+                : "text-earth-600 hover:bg-rose-50 hover:text-rose-600"
             }`}
           >
             <svg
@@ -73,18 +84,23 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 00-6.364 0z"
               />
             </svg>
             My Matches
+            {newMatches > 0 && (
+              <span className="ml-auto bg-rose-100 text-rose-600 text-xs py-1 px-2 rounded-full">
+                {newMatches}
+              </span>
+            )}
           </Link>
 
           <Link
             href="/profile"
             className={`flex items-center px-4 py-3 rounded-lg font-medium ${
               pathname === "/profile"
-                ? "bg-rose-50 text-rose-600"  // Active style
-                : "text-earth-600 hover:bg-rose-50 hover:text-rose-600"  // Inactive style
+                ? "bg-rose-50 text-rose-600"
+                : "text-earth-600 hover:bg-rose-50 hover:text-rose-600"
             }`}
           >
             <svg
@@ -112,13 +128,13 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-earth-600">New Matches</span>
                 <span className="bg-rose-100 text-rose-600 text-xs py-1 px-2 rounded-full">
-                  {stats.newMatches}
+                  {newMatches}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-earth-600">Messages</span>
+                <span className="text-sm text-earth-600">Unread Messages</span>
                 <span className="bg-rose-100 text-rose-600 text-xs py-1 px-2 rounded-full">
-                  {stats.messages}
+                  {unreadMessages}
                 </span>
               </div>
             </div>
@@ -126,7 +142,6 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
         </nav>
       </div>
 
-      {/* Sign Out Button - stuck to the bottom of sidebar */}
       <div className="p-4 border-t border-gray-200 mt-auto">
         <Button
           onClick={handleSignOut}
