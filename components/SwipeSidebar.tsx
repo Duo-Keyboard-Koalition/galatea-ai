@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/components/AuthContext";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { performSignOut } from "@/lib/signout";
 
 interface SidebarProps {
   stats: { newMatches: number; messages: number };
@@ -15,11 +15,9 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
   // Get the current path to determine which link is active
   const pathname = usePathname();
   const router = useRouter();
-  const {signOut } = useAuth();
-
   const handleSignOut = async () => {
     try {
-      await signOut();
+      await performSignOut();
       router.push('/');
     } catch (error) {
       console.error("Error signing out:", error);
@@ -34,7 +32,7 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
           <Link
             href="/swipe"
             className={`flex items-center px-4 py-3 rounded-lg font-medium ${
-              pathname === "/swipe" 
+              pathname === "/swipe"
                 ? "bg-rose-50 text-rose-600"  // Active style
                 : "text-earth-600 hover:bg-rose-50 hover:text-rose-600"  // Inactive style
             }`}
@@ -130,7 +128,7 @@ const SwipeSidebar = ({ stats }: SidebarProps) => {
 
       {/* Sign Out Button - stuck to the bottom of sidebar */}
       <div className="p-4 border-t border-gray-200 mt-auto">
-        <Button 
+        <Button
           onClick={handleSignOut}
           variant="outline"
           className="w-full flex items-center justify-center text-earth-600 hover:text-rose-600 hover:bg-rose-50 border-earth-200"

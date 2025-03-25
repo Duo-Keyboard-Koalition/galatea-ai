@@ -1,23 +1,46 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { 
-  User, 
-  getAuth,
-  onAuthStateChanged,
-  signOut as firebaseSignOut,
-} from "firebase/auth";
-import { googleSignIn } from "@/lib/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import app from "@/lib/firebase";
+
+// Define the shape of the user object
+interface ProviderData {
+  providerId: string;
+  uid: string;
+  displayName: string;
+  email: string;
+  phoneNumber: string | null;
+  photoURL: string;
+}
+
+interface StsTokenManager {
+  refreshToken: string;
+  accessToken: string;
+  expirationTime: number;
+}
+
+interface User {
+  uid: string;
+  email: string;
+  emailVerified: boolean;
+  displayName: string;
+  isAnonymous: boolean;
+  photoURL: string;
+  providerData: ProviderData[];
+  stsTokenManager: StsTokenManager;
+  createdAt: string;
+  lastLoginAt: string;
+  apiKey: string;
+  appName: string;
+}
 
 // Define the shape of our auth context
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   error: string | null;
-  signIn: () => Promise<void>;
-  signOut: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -26,8 +49,6 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   error: null,
-  signIn: async () => {},
-  signOut: async () => {},
   isAuthenticated: false,
 });
 
@@ -50,67 +71,64 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   // Listen to Firebase auth state changes
   useEffect(() => {
     console.log("Setting up auth state listener");
-    
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (currentUser) => {
+        console.log(
+          "Auth state changed:",
+          currentUser ? `Logged in as ${currentUser.displayName || currentUser.email}` : "Not logged in"
+        );
+        if (currentUser) {
+          const mappedUser: User = {
+            uid: currentUser.uid,
+            email: currentUser.email || "",
+            emailVerified: currentUser.emailVerified,
+            displayName: currentUser.displayName || "",
+            isAnonymous: currentUser.isAnonymous,
+            photoURL: currentUser.photoURL || "",
+            providerData: currentUser.providerData.map((provider) => ({
+              providerId: provider.providerId,
+              uid: provider.uid,
+              displayName: provider.displayName || "",
+              email: provider.email || "",
+              phoneNumber: provider.phoneNumber,
+              photoURL: provider.photoURL || "",
+            })),
+            stsTokenManager: {
+              refreshToken: currentUser.refreshToken || "",
+              accessToken: "", // Firebase does not expose this directly
+              expirationTime: 0, // Firebase does not expose this directly
+            },
+            createdAt: "", // Firebase does not expose this directly
+            lastLoginAt: "", // Firebase does not expose this directly
+            apiKey: "", // Firebase does not expose this directly
+            appName: auth.app.name,
+          };
+          setUser(mappedUser);
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
 
-    
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log("Auth state changed:", currentUser ? `Logged in as ${currentUser.displayName || currentUser.email}` : "Not logged in");
-      setUser(currentUser);
-      setLoading(false);
-      
-      // If user just signed in, redirect to swipe page
-      if (currentUser && !user) {
-        router.push('/swipe');
+        // If user just signed in, redirect to swipe page
+        if (currentUser && !user) {
+          router.push("/swipe");
+        }
+      },
+      (authError) => {
+        console.error("Auth state error:", authError);
+        setError(authError.message);
+        setLoading(false);
       }
-    }, (authError) => {
-      console.error("Auth state error:", authError);
-      setError(authError.message);
-      setLoading(false);
-    });
-    
+    );
+
     return () => unsubscribe();
   }, [auth, router]);
-
-  // Sign in with Google
-  const handleSignIn = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      setError(null);
-      await googleSignIn();
-      // Using redirect method, so we won't reach this point
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("Error during sign in:", error);
-        setError(error.message || "Failed to sign in");
-      } else {
-        console.error("Unknown error during sign in:", error);
-      }
-    }
-  };
-
-  // Sign out
-  const handleSignOut = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      await firebaseSignOut(auth);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("Error during sign out:", error);
-        setError(error.message || "Failed to sign out");
-      } else {
-        console.error("Unknown error during sign out:", error);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const value = {
     user,
     loading,
     error,
-    signIn: handleSignIn,
-    signOut: handleSignOut,
     isAuthenticated: !!user,
   };
 

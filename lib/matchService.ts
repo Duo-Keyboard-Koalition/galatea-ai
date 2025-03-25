@@ -64,7 +64,21 @@ const checkForMatch = async (userId, profileId) => {
 };
 
 // Get all matches for a user
-export const getUserMatches = async (userId) => {
+interface Match {
+  id: string;
+  profile: Profile;
+  createdAt: Date;
+  lastInteraction: Date;
+}
+
+interface Profile {
+  id: string;
+  name: string;
+  age: number;
+  [key: string]: unknown; // Allow additional properties
+}
+
+export const getUserMatches = async (userId: string): Promise<Match[]> => {
   try {
     const matchesQuery = query(
       collection(db, 'matches'),
@@ -72,14 +86,14 @@ export const getUserMatches = async (userId) => {
     );
     
     const matchesSnapshot = await getDocs(matchesQuery);
-    const matches = [];
+    const matches: Match[] = [];
     
     for (const matchDoc of matchesSnapshot.docs) {
       const matchData = matchDoc.data();
       
       // Get profile details
       const profileResponse = await fetch(`/api/profiles?id=${matchData.profileId}`);
-      const profileData = await profileResponse.json();
+      const profileData: Profile = await profileResponse.json();
       
       matches.push({
         id: matchDoc.id,
