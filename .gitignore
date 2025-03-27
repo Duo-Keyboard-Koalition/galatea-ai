@@ -27,14 +27,13 @@ yarn-error.log*
 
 # local env files
 .env*.local
-
+.env
 # vercel
 .vercel
-
+.firebase/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 .aider*
-.env
-.env
 /secrets/*
+/secrets/service-account.json

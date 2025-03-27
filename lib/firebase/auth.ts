@@ -2,7 +2,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged as _onAuthStateChanged,
-  User as FirebaseUser,
+  User,
   getAuth
 } from "firebase/auth";
 
@@ -14,13 +14,13 @@ const googleProvider = new GoogleAuthProvider();
 
 // Define the callback type for auth state changes
 interface AuthStateChangedCallback {
-  (user: FirebaseUser | null): void;
+  (user: User | null): void;
 }
 
 // Wrapper for Firebase's onAuthStateChanged
 export function onAuthStateChanged(cb: AuthStateChangedCallback) {
-  return _onAuthStateChanged(auth, (firebaseUser) => {
-    cb(firebaseUser);
+  return _onAuthStateChanged(auth, (User) => {
+    cb(User);
   });
 }
 

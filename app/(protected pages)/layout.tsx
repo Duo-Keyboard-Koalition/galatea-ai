@@ -9,6 +9,7 @@ import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MatchModel, { useMatchStore } from "@/models/matchModel";
 const SwipeSidebar = () => {
+  const router = useRouter();
   const pathname = usePathname();
   const { user, signOut } = useAuth(); // Ensure `user` is of type Firebase's User
 
@@ -27,6 +28,9 @@ const SwipeSidebar = () => {
     try {
       MatchModel.clearMatches();
       await signOut(); // Use signOut from auth context instead of direct import
+      // redirect to home
+     
+      router.push('/');
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -73,15 +77,15 @@ const SwipeSidebar = () => {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5 mr-3"
-              fill="none"
+              fill="none" /* Ensure the heart is outlined */
               viewBox="0 0 24 24"
-              stroke="currentColor"
+              stroke="currentColor" /* Use stroke for the outline */
+              strokeWidth={2} /* Define the stroke width */
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 00-6.364 0z"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
               />
             </svg>
             My Matches

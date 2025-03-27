@@ -75,7 +75,7 @@ function HomeView() {
           <span className='text-rose-600'>Wanted!</span>
         </h1>
         <p className='text-xl md:text-2xl text-earth-600 mb-10 max-w-3xl mx-auto'>
-        Other AI girlfriend apps bring the girl you want, Galatea.AI brings the girl you need. 
+        Other AI girlfriend apps bring the girl you want, Galatea.ai brings the girl you need. 
         </p>
       </section>
       <section className='grid md:grid-cols-3 gap-8 mb-20'>
