@@ -4,7 +4,7 @@ import {
   signInWithPopup,  // Changed from signInWithRedirect
   getRedirectResult 
 } from "firebase/auth";
-import app from "./firebase";
+import app from "./firebase/firebase";
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth(app);

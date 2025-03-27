@@ -1,48 +1,17 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { getAuth, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut as firebaseSignOut, User } from "firebase/auth"; // Use Firebase's User type
 import { useRouter } from "next/navigation";
-import app from "@/lib/firebase";
-
-// Define the shape of the user object
-interface ProviderData {
-  providerId: string;
-  uid: string;
-  displayName: string;
-  email: string;
-  phoneNumber: string | null;
-  photoURL: string;
-}
-
-interface StsTokenManager {
-  refreshToken: string;
-  accessToken: string;
-  expirationTime: number;
-}
-
-interface User {
-  uid: string;
-  email: string;
-  emailVerified: boolean;
-  displayName: string;
-  isAnonymous: boolean;
-  photoURL: string;
-  providerData: ProviderData[];
-  stsTokenManager: StsTokenManager;
-  createdAt: string;
-  lastLoginAt: string;
-  apiKey: string;
-  appName: string;
-}
+import app from "@/lib/firebase/firebase";
 
 // Define the shape of our auth context
 interface AuthContextType {
-  user: User | null;
+  user: User | null; // Replace custom User with Firebase's User
   loading: boolean;
-  error: string | null;
+  error: Error | null;
   isAuthenticated: boolean;
-  signOut: () => Promise<void>; // Add explicit sign out method
+  signOut: () => Promise<void>;
 }
 
 // Create context with a default value
@@ -51,7 +20,7 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   error: null,
   isAuthenticated: false,
-  signOut: async () => {}, // Default implementation
+  signOut: async () => {},
 });
 
 // Export a hook to use the auth context
@@ -66,7 +35,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   const router = useRouter();
   const auth = getAuth(app);
 
@@ -80,7 +49,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
       router.push('/');
     } catch (err) {
       console.error("Error signing out:", err);
-      setError("Failed to sign out");
+      setError(new Error("Failed to sign out"));
     }
   };
 
@@ -95,32 +64,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
           currentUser ? `Logged in as ${currentUser.displayName || currentUser.email}` : "Not logged in"
         );
         if (currentUser) {
-          const mappedUser: User = {
-            uid: currentUser.uid,
-            email: currentUser.email || "",
-            emailVerified: currentUser.emailVerified,
-            displayName: currentUser.displayName || "",
-            isAnonymous: currentUser.isAnonymous,
-            photoURL: currentUser.photoURL || "",
-            providerData: currentUser.providerData.map((provider) => ({
-              providerId: provider.providerId,
-              uid: provider.uid,
-              displayName: provider.displayName || "",
-              email: provider.email || "",
-              phoneNumber: provider.phoneNumber,
-              photoURL: provider.photoURL || "",
-            })),
-            stsTokenManager: {
-              refreshToken: currentUser.refreshToken || "",
-              accessToken: "", // Firebase does not expose this directly
-              expirationTime: 0, // Firebase does not expose this directly
-            },
-            createdAt: "", // Firebase does not expose this directly
-            lastLoginAt: "", // Firebase does not expose this directly
-            apiKey: "", // Firebase does not expose this directly
-            appName: auth.app.name,
-          };
-          setUser(mappedUser);
+          setUser(currentUser); // Use Firebase's User directly
         } else {
           console.log("No user detected, clearing user state");
           setUser(null);
@@ -129,7 +73,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
       },
       (authError) => {
         console.error("Auth state error:", authError);
-        setError(authError.message);
+        setError(authError);
         setLoading(false);
       }
     );
@@ -142,7 +86,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
     loading,
     error,
     isAuthenticated: !!user,
-    signOut: handleSignOut, // Provide the sign out method in context
+    signOut: handleSignOut,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

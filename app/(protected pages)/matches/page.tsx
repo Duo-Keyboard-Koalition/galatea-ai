@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import MatchModel, { useMatchStore, Match } from "@/models/matchModel";
+import WebAppLayout from "../layout"; // Import WebAppLayout
 
 export default function MatchesPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
-  // Use the store directly in components
   const { matches, loading, fetchMatches } = useMatchStore();
 
   useEffect(() => {
@@ -31,49 +31,53 @@ export default function MatchesPage() {
   // Authentication loading state
   if (authLoading || loading) {
     return (
-      <div className="h-full w-full flex items-center justify-center">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-600"></div>
-          <div className="text-2xl text-earth-800">Loading matches...</div>
+      <WebAppLayout>
+        <div className="h-full w-full flex items-center justify-center">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-600"></div>
+            <div className="text-2xl text-earth-800">Loading matches...</div>
+          </div>
         </div>
-      </div>
+      </WebAppLayout>
     );
   }
 
   return (
-    <div className="h-full w-full p-6 overflow-y-auto">
-      <h1 className="text-3xl font-bold text-earth-800 mb-6">My Matches</h1>
-      
-      {matches.length === 0 ? (
-        <Card className="p-8 text-center">
-          <div className="text-5xl mb-4">💔</div>
-          <h2 className="text-2xl font-bold text-earth-800 mb-2">No Matches Yet</h2>
-          <p className="text-earth-600 mb-6">
-            Keep swiping to find your perfect match!
-          </p>
-          <Button 
-            className="bg-rose-500 hover:bg-rose-600 text-white"
-            onClick={() => router.push('/swipe')}
-          >
-            Discover Matches
-          </Button>
-        </Card>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {matches.map((match) => (
-            <MatchCard 
-              key={match.id} 
-              match={match} 
-              onOpenConversation={(id) => {
-                // Mark as read when opening conversation
-                MatchModel.markAsRead(id);
-                router.push(`/messages/${id}`);
-              }}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+    <WebAppLayout>
+      <div className="h-full w-full p-6 overflow-y-auto">
+        <h1 className="text-3xl font-bold text-earth-800 mb-6">My Matches</h1>
+        
+        {matches.length === 0 ? (
+          <Card className="p-8 text-center">
+            <div className="text-5xl mb-4">💔</div>
+            <h2 className="text-2xl font-bold text-earth-800 mb-2">No Matches Yet</h2>
+            <p className="text-earth-600 mb-6">
+              Keep swiping to find your perfect match!
+            </p>
+            <Button 
+              className="bg-rose-500 hover:bg-rose-600 text-white"
+              onClick={() => router.push('/swipe')}
+            >
+              Discover Matches
+            </Button>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {matches.map((match) => (
+              <MatchCard 
+                key={match.id} 
+                match={match} 
+                onOpenConversation={(id) => {
+                  // Mark as read when opening conversation
+                  MatchModel.markAsRead(id);
+                  router.push(`/messages/${id}`);
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </WebAppLayout>
   );
 }
 

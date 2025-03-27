@@ -1,5 +1,5 @@
 import { getAuth, signOut as firebaseSignOut } from "firebase/auth";
-import app from "../firebase";
+import app from "../firebase/firebase";
 
 export const signOutUser = async (): Promise<void> => {
   const auth = getAuth(app);

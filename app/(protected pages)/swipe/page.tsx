@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
 import { ChevronLeft, ChevronRight, X, Heart } from "lucide-react";
 // Import the new separate sidebar component
-import SwipeSidebar from "@/components/signedIn/SwipeSidebar";
+
 import WebAppLayout from "../layout";
 
 // Define types for better type safety
@@ -670,7 +670,6 @@ export default function SwipePage() {
 
   // Authentication error handling
   if (authError) {
-    // route to /
     router.push("/");
     return null;
   }
@@ -766,26 +765,20 @@ export default function SwipePage() {
 
   // Main interface with components
   return (
-    <WebAppLayout>
-      <div className="h-screen w-screen flex overflow-hidden bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100 absolute top-0 left-0">
-        {/* Use the imported sidebar component instead of inline sidebar */}
-        <SwipeSidebar />
-        <div className="flex-1 flex flex-col h-full">
-          <main className="flex-1 h-full p-0">
-            <ProfileCard
-              profile={currentProfile}
-              currentImageIndex={currentImageIndex}
-              totalImages={totalImages}
-              onImageNav={handleImageNav}
-              onSwipe={handleSwipe}
-              swiping={swiping}
-              currentProfileIndex={currentProfileIndex}
-              totalProfiles={profiles.length}
-              isMobile={isMobile}
-            />
-          </main>
-        </div>
-      </div>
-    </WebAppLayout>
+    <div className="h-full w-full flex overflow-hidden bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100">
+      <main className="flex-1 h-full p-0">
+        <ProfileCard
+          profile={currentProfile}
+          currentImageIndex={currentImageIndex}
+          totalImages={totalImages}
+          onImageNav={handleImageNav}
+          onSwipe={handleSwipe}
+          swiping={swiping}
+          currentProfileIndex={currentProfileIndex}
+          totalProfiles={profiles.length}
+          isMobile={isMobile}
+        />
+      </main>
+    </div>
   );
 }

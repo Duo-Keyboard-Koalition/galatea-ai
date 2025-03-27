@@ -1,16 +1,22 @@
 import admin from "firebase-admin";
-import {serverFirebaseConfig} from "./config"; // Path to your downloaded JSON
-
-// Function to initialize Firebase Admin SDK
+import serviceAccountConfig from "@/secrets/service-account.json"; // Import the JSON file directly
+import {ServiceAccount} from "firebase-admin";
 export const getFirebaseAdminApp = () => {
   if (!admin.apps.length) {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: serverFirebaseConfig.project_id,
-        clientEmail: serverFirebaseConfig.client_email,
-        privateKey: serverFirebaseConfig.private_key.replace(/\\n/g, "\n"), // Ensure correct formatting of privateKey
-      }),
-    });
+    try {
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccountConfig as ServiceAccount), // Explicitly cast to ServiceAccount
+        });
+
+      // Test credentials by making a request to Firebase services
+      admin.auth().listUsers(1).catch((error) => {
+        console.error("Failed to initialize Firebase Admin SDK:", error);
+        process.exit(1); // Exit the process if credentials are invalid
+      });
+    } catch (error) {
+      console.error("Error initializing Firebase Admin SDK:", error);
+      process.exit(1); // Exit the process if initialization fails
+    }
   }
   return admin;
 };

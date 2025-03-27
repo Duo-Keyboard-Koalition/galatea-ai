@@ -1,7 +1,8 @@
 import { getFirestore, doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getAuth, updateProfile } from 'firebase/auth';
-import app from './firebase';
+import { UserRecord } from "firebase-admin/auth"; // Use Firebase's UserRecord type
+import app from './firebase/firebase';
 
 const db = getFirestore(app);
 const storage = getStorage(app);
