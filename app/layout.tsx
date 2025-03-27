@@ -19,11 +19,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  
   return (
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <main className="pt-16 min-h-screen">
+          <main className="min-h-screen">
             {children}
           </main>
         </AuthProvider>

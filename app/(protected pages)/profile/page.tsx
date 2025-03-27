@@ -6,8 +6,6 @@ import { useAuth } from "@/components/AuthContext";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getAuth } from "firebase/auth";
-import WebAppLayout from "../layout"; // Import WebAppLayout
-
 export default function ProfilePage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();

@@ -7,9 +7,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
 import { ChevronLeft, ChevronRight, X, Heart } from "lucide-react";
-// Import the new separate sidebar component
-
-import WebAppLayout from "../layout";
 
 // Define types for better type safety
 interface Profile {

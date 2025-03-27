@@ -482,7 +482,7 @@ export default function Home() {
   };
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100'>
+    <div className='pt-16 min-h-screen bg-gradient-to-br from-ivory-100 via-rose-50 to-earth-100'>
       <main className='container mx-auto px-6 py-16'>
         <Navbar currentView={currentView} setCurrentView={setCurrentView} />
         {renderView()}

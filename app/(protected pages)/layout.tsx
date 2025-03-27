@@ -8,8 +8,6 @@ import { usePathname } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MatchModel, { useMatchStore } from "@/models/matchModel";
-import { User } from "firebase/auth"; // Use Firebase's User type
-
 const SwipeSidebar = () => {
   const pathname = usePathname();
   const { user, signOut } = useAuth(); // Ensure `user` is of type Firebase's User

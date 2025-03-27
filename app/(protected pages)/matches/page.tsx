@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import MatchModel, { useMatchStore, Match } from "@/models/matchModel";
-import WebAppLayout from "../layout"; // Import WebAppLayout
-
 export default function MatchesPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
@@ -31,19 +29,16 @@ export default function MatchesPage() {
   // Authentication loading state
   if (authLoading || loading) {
     return (
-      <WebAppLayout>
         <div className="h-full w-full flex items-center justify-center">
           <div className="flex flex-col items-center space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-600"></div>
             <div className="text-2xl text-earth-800">Loading matches...</div>
           </div>
         </div>
-      </WebAppLayout>
     );
   }
 
   return (
-    <WebAppLayout>
       <div className="h-full w-full p-6 overflow-y-auto">
         <h1 className="text-3xl font-bold text-earth-800 mb-6">My Matches</h1>
         
@@ -77,7 +72,6 @@ export default function MatchesPage() {
           </div>
         )}
       </div>
-    </WebAppLayout>
   );
 }
 
