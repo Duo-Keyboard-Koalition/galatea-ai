@@ -116,7 +116,7 @@ export const useMatchStore = create<MatchStore>()(
 export class MatchModel {
   // Get all matches (with optional refresh from server)
   static async getMatches(userId?: string, forceRefresh = false): Promise<Match[]> {
-    const { matches, fetchMatches, initialized } = useMatchStore.getState();
+    const { fetchMatches, initialized } = useMatchStore.getState();
     
     // If we need fresh data or haven't initialized yet
     if (forceRefresh || !initialized) {

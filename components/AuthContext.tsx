@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import app from "@/lib/firebase";
 
@@ -42,6 +42,7 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   isAuthenticated: boolean;
+  signOut: () => Promise<void>; // Add explicit sign out method
 }
 
 // Create context with a default value
@@ -50,6 +51,7 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   error: null,
   isAuthenticated: false,
+  signOut: async () => {}, // Default implementation
 });
 
 // Export a hook to use the auth context
@@ -67,6 +69,20 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const auth = getAuth(app);
+
+  // Implementation of sign out function
+  const handleSignOut = async () => {
+    try {
+      console.log("Signing out from AuthContext...");
+      await firebaseSignOut(auth);
+      // Force clear the user state immediately
+      setUser(null);
+      router.push('/');
+    } catch (err) {
+      console.error("Error signing out:", err);
+      setError("Failed to sign out");
+    }
+  };
 
   // Listen to Firebase auth state changes
   useEffect(() => {
@@ -106,14 +122,10 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
           };
           setUser(mappedUser);
         } else {
+          console.log("No user detected, clearing user state");
           setUser(null);
         }
         setLoading(false);
-
-        // If user just signed in, redirect to swipe page
-        if (currentUser && !user) {
-          router.push("/swipe");
-        }
       },
       (authError) => {
         console.error("Auth state error:", authError);
@@ -130,6 +142,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
     loading,
     error,
     isAuthenticated: !!user,
+    signOut: handleSignOut, // Provide the sign out method in context
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

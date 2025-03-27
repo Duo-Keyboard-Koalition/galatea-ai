@@ -6,19 +6,22 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/AuthContext";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function SignInPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
+  const pathname = usePathname(); // Get the current path
 
   // Check if user is already signed in
   useEffect(() => {
-    if (user) {
+    if (user && pathname === '/sign-in') {
+      console.log('User already signed in, redirecting to /swipe');
       router.push('/swipe');
     }
-  }, [user, router]);
+  }, [user, router, pathname]);
 
   // Check for redirect result when page loads
   useEffect(() => {

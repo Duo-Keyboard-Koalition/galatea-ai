@@ -4,15 +4,14 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { performSignOut } from "@/lib/signout";
 import { useEffect } from "react";
 import { useAuth } from "@/components/AuthContext";
-import MatchModel, { useMatchStore } from "@/app/models/matchModel";
+import MatchModel, { useMatchStore } from "@/models/matchModel";
 
 const SwipeSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   const { matches, loading, fetchMatches, initialized } = useMatchStore();
 
@@ -28,8 +27,7 @@ const SwipeSidebar = () => {
   const handleSignOut = async () => {
     try {
       MatchModel.clearMatches();
-      await performSignOut();
-      router.push('/');
+      await signOut(); // Use signOut from auth context instead of direct import
     } catch (error) {
       console.error("Error signing out:", error);
     }

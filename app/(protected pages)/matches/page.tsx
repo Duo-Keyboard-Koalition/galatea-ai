@@ -6,7 +6,7 @@ import { useAuth } from "@/components/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
-import MatchModel, { useMatchStore, Match } from "@/app/models/matchModel";
+import MatchModel, { useMatchStore, Match } from "@/secrets/matchModel";
 
 export default function MatchesPage() {
   const router = useRouter();

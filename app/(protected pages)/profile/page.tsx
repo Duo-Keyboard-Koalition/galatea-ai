@@ -4,18 +4,21 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { getAuth } from "firebase/auth";
 
 export default function ProfilePage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [apiResponse, setApiResponse] = useState<string | null>(null);
 
   useEffect(() => {
     if (authLoading) return;
 
     if (!user) {
-      router.push('/sign-in');
+      router.push("/sign-in");
       return;
     }
 
@@ -26,6 +29,33 @@ export default function ProfilePage() {
     navigator.clipboard.writeText(JSON.stringify(user, null, 2));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const callProtectedAPI = async () => {
+    try {
+      const auth = getAuth();
+      const idToken = await auth.currentUser?.getIdToken();
+
+      const response = await fetch("/api/protected", {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Failed to call protected API:", errorData.error);
+        setApiResponse("Failed to call protected API");
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Protected API Response:", data);
+      setApiResponse(`Response: ${data.message}, User ID: ${data.userId}`);
+    } catch (error) {
+      console.error("Error calling protected API:", error);
+      setApiResponse("Error calling protected API");
+    }
   };
 
   if (authLoading || loading) {
@@ -42,7 +72,7 @@ export default function ProfilePage() {
   return (
     <div className="h-full w-full p-6 overflow-y-auto">
       <h1 className="text-3xl font-bold text-earth-800 mb-6">My Profile</h1>
-      
+
       <div className="flex flex-col space-y-6">
         <Card className="p-6">
           <h2 className="text-xl font-bold text-earth-700 mb-4">User JSON</h2>
@@ -64,6 +94,21 @@ export default function ProfilePage() {
               {JSON.stringify(user, null, 2)}
             </pre>
           </div>
+        </Card>
+
+        <Card className="p-6">
+          <h2 className="text-xl font-bold text-earth-700 mb-4">
+            Call Protected API
+          </h2>
+          <Button
+            className="bg-rose-500 hover:bg-rose-600 text-white"
+            onClick={callProtectedAPI}
+          >
+            Call Protected API
+          </Button>
+          {apiResponse && (
+            <p className="mt-4 text-sm text-earth-700">{apiResponse}</p>
+          )}
         </Card>
       </div>
     </div>
