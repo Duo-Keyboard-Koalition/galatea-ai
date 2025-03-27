@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
@@ -10,7 +10,6 @@ import MatchModel, { useMatchStore } from "@/models/matchModel";
 
 const SwipeSidebar = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const { user, signOut } = useAuth();
 
   const { matches, loading, fetchMatches, initialized } = useMatchStore();

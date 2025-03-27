@@ -1,4 +1,6 @@
-import serviceAccount from "@/secrets/service-account.json"; // Server-side Firebase config
+import serviceAccountData from "@/secrets/service-account.json"; // Server-side Firebase config
+
+const serviceAccount: ServerFirebaseConfig = serviceAccountData as ServerFirebaseConfig;
 
 export interface FirebaseConfig {
   apiKey: string;

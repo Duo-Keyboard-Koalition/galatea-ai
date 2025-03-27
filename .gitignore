@@ -37,13 +37,4 @@ next-env.d.ts
 .aider*
 .env
 .env
-.env
-.env
-.env
-.env
-.env
-.env
-.env
-.env
-.env
-.env
+/secrets/*
