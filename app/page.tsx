@@ -71,11 +71,11 @@ function HomeView() {
           className='mx-auto mb-8'
         />
         <h1 className='text-5xl md:text-7xl font-bold text-earth-800 mb-6'>
-          Boyfriends{' '}
+          Friends{' '}
           <span className='text-rose-600'>Wanted!</span>
         </h1>
         <p className='text-xl md:text-2xl text-earth-600 mb-10 max-w-3xl mx-auto'>
-        Other AI girlfriend apps bring the girl you want, Galatea.ai brings the girl you need. 
+        Other AI partner apps bring the partner you want, Galatea.ai brings the partner you need. 
         </p>
       </section>
       <section className='grid md:grid-cols-3 gap-8 mb-20'>

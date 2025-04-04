@@ -7,8 +7,8 @@ import { AuthProvider } from '@/components/AuthContext';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Galatea.AI - Your Perfect AI Girlfriend',
-  description: 'Experience companionship and emotional support with personalized AI girlfriends',
+  title: 'Galatea.AI - Your Perfect AI partner',
+  description: 'Experience companionship and emotional support with personalized AI partner',
   icons: {
     icon: '/favicon.png',
   }

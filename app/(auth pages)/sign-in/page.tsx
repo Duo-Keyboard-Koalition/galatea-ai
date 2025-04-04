@@ -57,6 +57,10 @@ export default function SignInPage() {
     }
   };
 
+  const goToHomePage = () => {
+    router.push('/');
+  };
+
   return (
     <div className="fixed inset-0 w-full h-full">
       <div 
@@ -89,6 +93,14 @@ export default function SignInPage() {
                 <Image src="/icons/google-icon.svg" alt="Google" width={20} height={20} className="mr-2" />
               )}
               {isLoading ? "Signing in..." : "Sign in with Google"}
+            </Button>
+            
+            <Button 
+              onClick={goToHomePage}
+              variant="ghost"
+              className="w-full mt-4 text-sm text-gray-600 hover:text-gray-900 px-6 py-3 flex items-center justify-center"
+            >
+              ← Back to home
             </Button>
           </div>
         </div>

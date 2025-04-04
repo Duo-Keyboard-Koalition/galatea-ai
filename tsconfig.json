@@ -25,15 +25,17 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "target": "ES2017"
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "lib/*",
-    ".next/types/**/*.ts"
-, "lib/firebase/serverApp.js"  ],
+    ".next/types/**/*.ts",
+    "lib/firebase/serverApp.js"
+  ],
   "exclude": [
     "node_modules"
   ]
