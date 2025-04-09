@@ -34,7 +34,7 @@ export default function ProfilePage() {
     try {
       const auth = getAuth();
       const idToken = await auth.currentUser?.getIdToken();
-
+      console.log("ID Token:", idToken);
       const response = await fetch("/api/protected", {
         headers: {
           Authorization: `Bearer ${idToken}`,

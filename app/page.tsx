@@ -47,11 +47,12 @@ function Navbar({ currentView, setCurrentView }: { currentView: ViewType, setCur
               Philosophy
             </button>
           </div>
-          
-          <div className='flex items-center space-x-4'>
-              <Button asChild variant='ghost' className='text-earth-700 hover:text-rose-600 hover:bg-rose-50'>
-                <Link href='/sign-in'>Sign In</Link>
-              </Button>
+
+          {/* Rightmost Sign In button */}
+          <div>
+            <Button asChild variant='ghost' className='text-earth-700 hover:text-rose-600 hover:bg-rose-50'>
+              <Link href='/sign-in'>Sign In</Link>
+            </Button>
           </div>
         </div>
       </div>
