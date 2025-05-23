@@ -1,14 +1,15 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from "tailwindcss"
+
+const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-    './secrets/**/*',
-    './models/**/*',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+    "*.{js,ts,jsx,tsx,mdx}",
+  ],
+  prefix: "",
   theme: {
     container: {
       center: true,
@@ -19,6 +20,32 @@ module.exports = {
     },
     extend: {
       colors: {
+        teal: {
+          50: "#e6fcff",
+          100: "#c2f9ff",
+          200: "#8ff2ff",
+          300: "#4ee6ff",
+          400: "#1cd8ff",
+          500: "#00c4f0",
+          600: "#009bc2",
+          700: "#007a9e",
+          800: "#006380",
+          900: "#00526a",
+          950: "#003544",
+        },
+        gray: {
+          950: "#0a0c10",
+          900: "#111318",
+          800: "#1a1d24",
+          700: "#2a2f3a",
+        },
+        black: "#050507",
+        galatea: {
+          black: "#050507",
+          dark: "#0a0f14",
+          teal: "#00c4f0",
+          light: "#e0e0e0",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -52,27 +79,6 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        ivory: {
-          100: "#FFFFF0",
-          200: "#FEFCEB",
-        },
-        rose: {
-          50: "#FFF1F2",
-          100: "#FFE4E6",
-          500: "#F43F5E",
-          600: "#E11D48",
-          700: "#BE123C",
-        },
-        earth: {
-          100: "#E5D9C9",
-          200: "#D3C1A8",
-          300: "#C1A987",
-          400: "#AF9166",
-          500: "#9D7945",
-          600: "#7A5F36",
-          700: "#574527",
-          800: "#342B18",
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -81,12 +87,12 @@ module.exports = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: 0 },
+          from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
+          to: { height: "0" },
         },
       },
       animation: {
@@ -95,8 +101,7 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    import('@tailwindcss/aspect-ratio'),
-  ],
-}
+  plugins: [require("tailwindcss-animate")],
+} satisfies Config
 
+export default config
